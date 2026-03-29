@@ -285,7 +285,7 @@ This means:
 
 Premium features may add capabilities, but the user must always remain the owner of their underlying records.
 
-#### 1.9.7 Premium Should Fund Utility, Not Gate Dignity
+#### 1.9.7 Premium Should Fund Utility, Not Gate Essential Functionality
 
 The free tier must be genuinely usable, not a crippled demo.
 
@@ -2423,7 +2423,7 @@ This competitive analysis leads to the following product directives:
 3. Budgeting must stay flexible, because anti-YNAB positioning fails if the product becomes doctrinal.
 4. Reporting must feel premium, because users compare against polished paid apps even if those apps are less private.
 5. The free tier must feel honest and useful, because target users are skeptical after the post-Mint transition and ongoing subscription fatigue.
-6. Premium must sell depth and control, not basic dignity.
+6. Premium must sell depth and control, not essential functionality.
 7. Product messaging must repeatedly connect privacy, calmness, reliability, and speed.
 
 ### 3.15 Core Competitive Narrative
@@ -2441,3 +2441,1058 @@ The app should be presented to the market with a narrative simple enough to surv
 Against the current market, the app is best defined as:
 
 **A privacy-first, offline-first personal finance app for people who want the control of manual tracking, the usefulness of modern insights, and the flexibility of budgeting without bank linking, cloud dependence, or YNAB-style ideology.**
+
+## 4. Core Feature Set Overview and Feature Prioritization Matrix
+
+### 4.1 Section Purpose
+
+This section defines the product's core feature inventory, the rationale behind each feature group, and the release prioritization logic used to decide what belongs in the free tier, what belongs in premium, and what must ship in the first production-ready version.
+
+The prioritization model is driven by six constraints:
+
+1. The app must deliver clear standalone value with no account creation and no bank linking.
+2. The free tier must be honest and useful enough to establish trust and habit.
+3. The premium tier must unlock depth, customization, and leverage rather than essential functionality.
+4. Every core workflow must work fully offline after install.
+5. Manual entry must be fast enough to sustain repeated daily use.
+6. The first release must be narrow enough to execute well and broad enough to justify a one-time or subscription purchase.
+
+### 4.2 Feature Strategy Summary
+
+The app is not a general-purpose financial super-app. The feature set is intentionally organized around a single high-value loop:
+
+1. Capture money activity quickly.
+2. Classify it with minimal effort.
+3. Compare spending against simple plans.
+4. Review trends and monthly outcomes.
+5. Repeat without friction.
+
+All feature decisions must strengthen one or more parts of that loop.
+
+Features that do not materially improve capture, classification, planning, review, or retention should be deprioritized even if they are common in finance competitors.
+
+### 4.3 Product Capability Layers
+
+The feature set is divided into four capability layers:
+
+#### 4.3.1 Layer A: Habit Formation
+
+These features help users start and maintain tracking:
+
+- onboarding
+- first transaction entry
+- fast add
+- transaction list
+- monthly overview
+- default categories
+- smart categorization suggestions
+
+This layer is the foundation of the free product.
+
+#### 4.3.2 Layer B: Control and Planning
+
+These features help users move from basic tracking to intentional management:
+
+- search and filtering
+- transaction editing
+- month navigation
+- custom categories
+- category budgets
+- recurring transactions
+- multi-currency support
+
+This layer includes essential free control features and premium planning features.
+Free control features keep the ledger usable over time, while premium features monetize deeper personalization, planning, and advanced use cases without gating essential functionality.
+
+#### 4.3.3 Layer C: Insight and Interpretation
+
+These features help users understand patterns rather than just record facts:
+
+- category breakdowns
+- trends over time
+- charts
+- multi-period comparisons
+- budget progress views
+- anomaly visibility through filters and summaries
+
+This layer strengthens retention and premium willingness-to-pay.
+
+#### 4.3.4 Layer D: Ownership and Convenience
+
+These features reinforce trust and everyday usefulness:
+
+- offline storage
+- local export
+- widget surfaces
+- settings and data controls
+- restoration of paid entitlements through app store account
+
+This layer is essential to product credibility even when not always visible in marketing.
+
+### 4.4 Core Feature Principles
+
+Every feature in this section is evaluated against the following standards:
+
+#### 4.4.1 Must Reduce Cognitive Load
+
+The app should ask for fewer decisions, fewer taps, and fewer corrections over time.
+
+#### 4.4.2 Must Preserve Privacy Posture
+
+Core feature value must not depend on personal account creation, bank credentials, ad-tech tracking, or cloud-hosted financial data.
+
+#### 4.4.3 Must Reward Repeat Usage
+
+A feature is stronger when it becomes more helpful after the fifth, fiftieth, and five-hundredth transaction.
+
+#### 4.4.4 Must Be Legible to Mainstream Users
+
+Features should not require users to understand accounting concepts, budgeting doctrine, or specialized terminology.
+
+#### 4.4.5 Must Fit the Monetization Ethic
+
+Free features should enable meaningful day-to-day use.
+Premium features should compound value for committed users through customization, planning depth, and reporting richness.
+
+### 4.5 Core Feature Set Overview
+
+The core product feature set is grouped into twelve domains:
+
+1. Onboarding and Setup
+2. Transaction Capture
+3. Transaction Management
+4. Categorization
+5. Monthly Overview
+6. Budgeting
+7. Recurring Transactions
+8. Reports and Charts
+9. Search and Filters
+10. Export and Ownership
+11. Monetization and Paywall
+12. Settings, Personalization, and Widgets
+
+Each domain is described below in product terms rather than implementation detail.
+
+### 4.6 Domain 1: Onboarding and Setup
+
+#### 4.6.1 Goal
+
+Get a new user from install to first value realization in under 3 minutes, with first transaction entry available in under 60 seconds.
+
+#### 4.6.2 User Problem Solved
+
+Users coming from Mint, spreadsheets, or abandoned budgeting apps often quit during setup if they are asked to:
+
+- create an account
+- link banks
+- configure too many categories
+- choose a budgeting methodology
+- answer unnecessary personal finance questions
+
+The onboarding experience must prove that this app is different immediately.
+
+#### 4.6.3 Included Capabilities
+
+- welcome screen with product promise
+- short explanation of offline-first and privacy-first model
+- optional choice of base currency
+- optional choice of month start preference
+- optional starter category selection
+- first transaction prompt
+- premium overview during onboarding without blocking free usage
+
+#### 4.6.4 Product Requirements for This Domain
+
+- The app must not require sign-up.
+- The app must not require email capture for basic usage.
+- The app must not prompt for bank linking.
+- The user must be able to skip nonessential setup.
+- The first useful screen after onboarding must be the main dashboard or the add-transaction flow.
+
+#### 4.6.5 Free vs Premium Positioning
+
+Onboarding is free for all users.
+Premium upsell may be shown contextually but must never block core free setup.
+
+#### 4.6.6 Priority Rationale
+
+This domain is P0 because poor onboarding destroys the product before users experience the differentiator.
+
+### 4.7 Domain 2: Transaction Capture
+
+#### 4.7.1 Goal
+
+Make manual entry fast enough that common transactions can be logged in 5 to 15 seconds.
+
+#### 4.7.2 User Problem Solved
+
+Manual tracking fails when entry is slow, repetitive, or easy to postpone.
+
+#### 4.7.3 Included Capabilities
+
+- add expense
+- add income
+- amount input
+- merchant field and optional note field
+- date selection with current date default
+- category assignment
+- optional currency selection
+- optional recurrence tagging shortcut
+- save-and-add-another flow
+- recent merchant suggestions
+- category suggestions based on local history
+
+#### 4.7.4 Product Requirements for This Domain
+
+Transaction entry is the product's most important repeated action and must feel:
+
+- immediate
+- low-friction
+- predictable
+- forgiving
+
+Every extra field should be optional unless the app cannot function without it.
+
+#### 4.7.5 Free vs Premium Positioning
+
+Free:
+
+- manual transaction entry
+- default categories
+- monthly overview impact
+
+Premium:
+
+- advanced custom categorization support in entry flow
+- multi-currency transaction support
+- recurring transaction shortcuts where monetized as premium
+
+#### 4.7.6 Priority Rationale
+
+This domain is P0 and is the single highest-value retention lever in the product.
+
+### 4.8 Domain 3: Transaction Management
+
+#### 4.8.1 Goal
+
+Allow users to trust the ledger because every transaction can be reviewed, edited, duplicated, moved, or deleted without confusion.
+
+#### 4.8.2 User Problem Solved
+
+Users inevitably make mistakes, forget entries, enter wrong amounts, or want to clean up history. If editing is painful, trust collapses.
+
+#### 4.8.3 Included Capabilities
+
+- transaction list ordered by date
+- drill-down detail view
+- edit all mutable fields
+- delete transaction with confirmation
+- duplicate transaction
+- mark recurring-generated entries if applicable
+- month-based browsing
+- empty states for no transactions
+
+#### 4.8.4 Product Requirements for This Domain
+
+- Users must be able to review transactions without confusion.
+- Users must be able to edit all mutable transaction details.
+- Users must be able to delete transactions with confirmation.
+- The interface must clearly distinguish empty states from missing data.
+
+#### 4.8.5 Free vs Premium Positioning
+
+CRUD reliability must be available to all users.
+The product must not place basic correction or deletion behind a paywall.
+
+#### 4.8.6 Priority Rationale
+
+This domain is P0 because a ledger product without robust editability becomes unusable within days.
+
+### 4.9 Domain 4: Categorization
+
+#### 4.9.1 Goal
+
+Help users organize spending consistently without turning category management into a setup project.
+
+#### 4.9.2 User Problem Solved
+
+Raw transaction lists are difficult to interpret. Users need categorization to answer practical questions such as:
+
+- how much did I spend on groceries this month
+- which areas are rising fastest
+- what should I budget next month
+
+#### 4.9.3 Included Capabilities
+
+- default system category library
+- category icons and colors
+- category grouping structure where supported
+- local smart category suggestions from prior entries
+- category rename and custom creation
+- archived or hidden categories if included in later milestone
+
+#### 4.9.4 Product Requirements for This Domain
+
+- The app must provide a usable built-in category library.
+- Category assignment must be available during entry and editing.
+- Local category suggestions must improve repeat entry without requiring cloud processing.
+- Custom category management must preserve clarity and avoid setup overhead.
+
+#### 4.9.5 Free vs Premium Positioning
+
+Free:
+
+- basic built-in categories
+- assign category during entry
+- reassign category during editing
+
+Premium:
+
+- create custom categories
+- edit category presentation metadata
+- potentially manage advanced category structures
+
+Custom categories are premium because they reflect a committed use case and ongoing personalization, while default categories remain sufficient for free users to understand spending.
+
+#### 4.9.6 Priority Rationale
+
+Built-in categorization is P0.
+Custom category management is P1 (Target for launch) and premium-defining.
+
+### 4.10 Domain 5: Monthly Overview
+
+#### 4.10.1 Goal
+
+Give users a calm, immediate snapshot of the current month and recent months without requiring report-building.
+
+#### 4.10.2 User Problem Solved
+
+Users need immediate answers when they open the app:
+
+- how much have I spent this month
+- how much income have I logged
+- what is the net result
+- where is my money going
+
+#### 4.10.3 Included Capabilities
+
+- total income for selected month
+- total expenses for selected month
+- net balance for selected month
+- top spending categories
+- recent transactions preview
+- month selector
+- progress cues against budget when premium budgets exist
+
+#### 4.10.4 Product Requirements for This Domain
+
+- The monthly overview must be understandable at a glance.
+- The overview must surface current-month totals without requiring report configuration.
+- The overview must make recent activity easy to review.
+- Premium-only enhancements must add depth without weakening the free reward loop.
+
+#### 4.10.5 Free vs Premium Positioning
+
+Monthly overview is a core free feature because it is the minimum reward loop for regular tracking.
+
+Premium may expand the overview with:
+
+- richer chart surfaces
+- comparative insights
+- budget overlays
+- trend callouts
+
+#### 4.10.6 Priority Rationale
+
+This domain is P0 because it converts raw data entry into visible value.
+
+### 4.11 Domain 6: Budgeting
+
+#### 4.11.1 Goal
+
+Provide flexible per-category budgeting without imposing a rigid budgeting ideology.
+
+#### 4.11.2 User Problem Solved
+
+Many users want spending guardrails but do not want envelope-based rules, reconciliation rituals, or zero-based workflow complexity.
+
+#### 4.11.3 Included Capabilities
+
+- set monthly budget amount for a category
+- view spent amount against budget
+- view remaining amount or over-budget amount
+- progress indicators
+- category budget status in overview and category views
+- month-by-month editable budget values
+
+#### 4.11.4 Product Requirements for This Domain
+
+- Budgeting must remain flexible rather than doctrinal.
+- Users must be able to set and edit monthly category budgets.
+- The app must clearly show budget status against actual spending.
+- Budget workflows must avoid mandatory envelope or income-allocation mechanics.
+
+#### 4.11.5 Explicit Non-Goals
+
+The first version of budgeting does not need:
+
+- mandatory rollover logic
+- income assignment workflows
+- account reconciliation
+- rule-based fund movement between envelopes
+
+#### 4.11.6 Free vs Premium Positioning
+
+Budgets per category are premium.
+
+This is appropriate because budgets:
+
+- are advanced planning functionality
+- become more valuable after habit establishment
+- create ongoing premium utility without crippling the free tier
+
+#### 4.11.7 Priority Rationale
+
+Budgeting is P1 (Target for launch) and a major premium conversion driver.
+
+### 4.12 Domain 7: Recurring Transactions
+
+#### 4.12.1 Goal
+
+Reduce repetitive entry for rent, subscriptions, salaries, bills, and other predictable flows.
+
+#### 4.12.2 User Problem Solved
+
+Users do not want to retype the same monthly transactions forever, but they also may not want the complexity or risk of automated bank import.
+
+Recurring logic preserves manual control while removing repetitive effort.
+
+#### 4.12.3 Included Capabilities
+
+- create recurring template from transaction or from scratch
+- recurrence patterns: daily, weekly, biweekly, monthly, yearly
+- next due date tracking
+- auto-generate local pending or posted transactions depending on design
+- edit future recurrence rule
+- stop, pause, or delete recurrence
+- visually distinguish recurring-generated transactions
+
+#### 4.12.4 Product Requirements for This Domain
+
+- recurring generation must work offline
+- generated transactions must be editable individually
+- editing one occurrence should not silently rewrite historical records
+- users must understand whether generation is automatic, due-based, or confirm-before-save
+
+#### 4.12.5 Free vs Premium Positioning
+
+Recurring transactions are premium because they provide substantial convenience leverage for committed users and reduce long-term maintenance cost.
+
+#### 4.12.6 Priority Rationale
+
+Recurring support is P1 (Target for launch) because it materially improves retention for users with regular bills and salaries.
+
+### 4.13 Domain 8: Reports and Charts
+
+#### 4.13.1 Goal
+
+Transform stored transaction data into understandable patterns that help users make better monthly decisions.
+
+#### 4.13.2 User Problem Solved
+
+Users who log data need more than a list. They need to answer:
+
+- which categories are growing
+- how this month compares to last month
+- whether spending concentration is changing
+- where cuts are realistic
+
+#### 4.13.3 Included Capabilities
+
+- category spending breakdown
+- monthly trend charts
+- income versus expense charts
+- period comparison views
+- budget versus actual charts
+- simple trend summaries
+
+#### 4.13.4 Product Requirements for This Domain
+
+Reports should be:
+
+- visually clear
+- fast to load
+- understandable without financial expertise
+- useful on small screens
+
+They should not feel like desktop BI tools compressed into mobile.
+
+#### 4.13.5 Free vs Premium Positioning
+
+Free:
+
+- basic monthly overview and simple category visibility
+
+Premium:
+
+- charts
+- trends
+- deeper historical comparisons
+- budget overlays
+
+#### 4.13.6 Priority Rationale
+
+Charts and trends are P1 (Target for launch) because they materially support premium value perception.
+
+### 4.14 Domain 9: Search and Filters
+
+#### 4.14.1 Goal
+
+Make the ledger navigable after the dataset grows beyond casual scrolling.
+
+#### 4.14.2 User Problem Solved
+
+After 100 to 500 transactions, users need fast lookup for:
+
+- a specific merchant
+- a date range
+- a category
+- an amount pattern
+- income only or expense only
+
+#### 4.14.3 Included Capabilities
+
+- text search across merchant and note fields
+- filter by category
+- filter by date range
+- filter by transaction type
+- filter by amount range if included at launch
+- sort options where useful
+
+#### 4.14.4 Product Requirements for This Domain
+
+- Search must remain fast as transaction volume grows.
+- Users must be able to combine basic filters without confusion.
+- Search results must make matching transactions easy to identify.
+- Advanced saved views may be deferred without compromising core ledger usability.
+
+#### 4.14.5 Free vs Premium Positioning
+
+Basic search and filtering should be free because ledger usability depends on it.
+
+Advanced filter presets or saved views may be deferred or considered premium only in later versions, not at launch.
+
+#### 4.14.6 Priority Rationale
+
+Search and filtering are P1 (Target for launch) because they become essential as data accumulates, even if they are less visible in first-session marketing.
+
+### 4.15 Domain 10: Export and Ownership
+
+#### 4.15.1 Goal
+
+Make user data portable and trustworthy by allowing local export without lock-in.
+
+#### 4.15.2 User Problem Solved
+
+Privacy-first claims are not credible if users cannot easily extract their own data.
+
+#### 4.15.3 Included Capabilities
+
+- CSV export
+- local file generation
+- share sheet integration
+- clear export field mapping
+- export scoped to all data or selected date range if supported
+
+#### 4.15.4 Product Requirements for This Domain
+
+Export is strategically important because it proves:
+
+- the app does not trap user data
+- the app can coexist with spreadsheets and accountants
+- the business model is not based on locking users in
+
+#### 4.15.5 Free vs Premium Positioning
+
+CSV export is premium at launch based on the monetization model.
+
+This is acceptable because:
+
+- core usage remains intact for free users
+- export is an ownership and power-user convenience feature
+- premium buyers are likely to value archival and interoperability workflows
+
+The product should still communicate that data remains stored locally and accessible inside the app even on free.
+
+#### 4.15.6 Priority Rationale
+
+Export is P1 (Target for launch) because it is both a premium feature and a trust-signaling feature.
+
+### 4.16 Domain 11: Monetization and Paywall
+
+#### 4.16.1 Goal
+
+Convert satisfied free users into premium users without dark patterns, pressure, or functional sabotage.
+
+#### 4.16.2 User Problem Solved
+
+Users need a clear explanation of:
+
+- what is free forever
+- what premium unlocks
+- whether premium is subscription-only
+- whether a one-time purchase exists
+
+#### 4.16.3 Included Capabilities
+
+- premium feature comparison screen
+- one-time purchase option at $149.99
+- monthly subscription option at $4.99 per month
+- RevenueCat entitlement management
+- restore purchases
+- contextual upsell entry points
+
+#### 4.16.4 Product Requirements for This Domain
+
+The paywall must feel:
+
+- transparent
+- calm
+- factual
+- non-manipulative
+
+It must not:
+
+- hide prices
+- use fake urgency
+- block access to existing user data
+- punish free users with artificial friction
+
+#### 4.16.5 Free vs Premium Positioning
+
+Free:
+
+- clear access to core offline finance workflows
+- transparent visibility into premium feature boundaries
+
+Premium:
+
+- unlocks advanced planning, customization, export, and reporting capabilities
+- is available through subscription and one-time purchase options
+
+#### 4.16.6 Priority Rationale
+
+Paywall and entitlements are P0 for production launch because the product requires a working business model, but upsell frequency and placement must remain subordinate to trust.
+
+### 4.17 Domain 12: Settings, Personalization, and Widgets
+
+#### 4.17.1 Goal
+
+Give users enough control over preferences, appearance, data handling, and quick-glance access to make the product feel owned and dependable.
+
+#### 4.17.2 User Problem Solved
+
+Users need straightforward control over app behavior, appearance, premium status, and data handling without searching through hidden menus or sacrificing trust.
+
+#### 4.17.3 Included Capabilities
+
+- theme selection or system theme support
+- base currency preference
+- premium management
+- export access
+- privacy explanation
+- data deletion controls
+- category management entry point
+- budget settings entry point
+- widget configuration where supported
+- widget surfaces for current month spend, selected budget progress, or quick-glance reminders where supported
+
+#### 4.17.4 Product Requirements for This Domain
+
+- Settings must make essential preferences easy to find and change.
+- Data handling controls must be clear and trustworthy.
+- Premium status and premium management must be understandable from within the app.
+- Widgets, when included, must deliver quick-glance value without duplicating the full app experience.
+- Premium widgets should surface only high-signal information such as current month spend, remaining budget in a chosen category, or a quick-glance reminder where platform constraints allow.
+
+#### 4.17.5 Free vs Premium Positioning
+
+Free:
+
+- core settings and privacy controls
+- category and budget entry points relevant to unlocked features
+
+Premium:
+
+- widget access
+- premium management surfaces for active subscribers or purchasers
+
+#### 4.17.6 Priority Rationale
+
+Core settings are P0.
+Widgets are P2 unless they can be shipped to a high standard without delaying core finance workflows.
+
+### 4.18 Launch Tier Definition
+
+The launch product is defined as a two-tier offering with a meaningful free experience and a clearly enhanced premium layer.
+
+#### 4.18.1 Free Tier Definition
+
+The free tier includes:
+
+- no account required
+- full offline local usage
+- onboarding
+- manual transaction entry
+- transaction list and editing
+- built-in categories
+- smart category suggestions from local history
+- monthly overview
+- basic category visibility
+- search and filters
+
+The free tier is intended to answer the question:
+
+**Can this app become my daily manual finance tracker?**
+
+#### 4.18.2 Premium Tier Definition
+
+Premium includes:
+
+- custom categories
+- budgets per category
+- recurring transactions
+- multi-currency support
+- CSV export
+- charts and trends
+- widgets
+
+Premium is intended to answer the question:
+
+**Can this app become my long-term personal finance system?**
+
+### 4.19 Feature Prioritization Method
+
+Each feature is evaluated against six dimensions:
+
+1. User value: how strongly the feature improves real user outcomes.
+2. Core loop impact: how directly it strengthens capture, classification, planning, or review.
+3. Differentiation: how strongly it supports the product's post-Mint, anti-YNAB, privacy-first position.
+4. Revenue leverage: how strongly it supports premium conversion or retention.
+5. Complexity: implementation and UX complexity.
+6. Launch necessity: whether the feature is required for the product to feel coherent at v1.
+
+Scores use a 1 to 5 scale:
+
+- 1 = very low
+- 2 = low
+- 3 = medium
+- 4 = high
+- 5 = very high
+
+Priority buckets:
+
+- P0 = required for v1 launch
+- P1 = should ship in v1 or immediate post-launch window; strong premium or retention impact
+- P2 = valuable but deferrable
+- P3 = speculative or future expansion
+
+### 4.20 Feature Prioritization Matrix
+
+| Feature Domain | Key Capability | User Value | Core Loop Impact | Differentiation | Revenue Leverage | Complexity | Launch Necessity | Priority | Tier |
+|---|---:|---:|---:|---:|---:|---:|---:|---|---|
+| Onboarding | Privacy-first setup with no account | 5 | 5 | 5 | 2 | 2 | 5 | P0 | Free |
+| Transaction Capture | Fast manual add flow | 5 | 5 | 5 | 4 | 4 | 5 | P0 | Free |
+| Transaction Management | Edit/delete/duplicate ledger entries | 5 | 5 | 4 | 2 | 3 | 5 | P0 | Free |
+| Built-in Categories | Default category library | 5 | 5 | 4 | 2 | 2 | 5 | P0 | Free |
+| Smart Categorization | Local suggestions from history | 5 | 5 | 5 | 4 | 4 | 5 | P0 | Free |
+| Monthly Overview | Income/expense/net monthly summary | 5 | 5 | 4 | 3 | 3 | 5 | P0 | Free |
+| Settings Core | Theme, currency, privacy, purchase restore | 4 | 3 | 4 | 4 | 3 | 5 | P0 | Mixed |
+| RevenueCat Entitlements | Purchase and restore handling | 4 | 2 | 2 | 5 | 3 | 5 | P0 | Premium |
+| Custom Categories | User-created categories | 4 | 4 | 4 | 5 | 3 | 4 | P1 | Premium |
+| Category Budgets | Monthly budgets per category | 5 | 4 | 5 | 5 | 4 | 4 | P1 | Premium |
+| Recurring Transactions | Rule-based repeated entries | 5 | 5 | 4 | 5 | 4 | 4 | P1 | Premium |
+| Multi-Currency | Transaction-level currency support | 4 | 3 | 3 | 4 | 5 | 3 | P1 | Premium |
+| Reports and Charts | Trends, comparisons, visual insights | 5 | 4 | 4 | 5 | 4 | 4 | P1 | Premium |
+| Search and Filters | Search ledger by text/date/category | 4 | 4 | 3 | 2 | 3 | 4 | P1 | Free |
+| CSV Export | Local data export | 4 | 2 | 5 | 4 | 3 | 4 | P1 | Premium |
+| Widgets | Home screen glanceable finance info | 3 | 2 | 3 | 4 | 4 | 2 | P2 | Premium |
+| Advanced Filter Presets | Saved filter views | 3 | 3 | 2 | 3 | 3 | 2 | P2 | Premium or Free Later |
+| Budget Rollover Logic | Carry-over budgets between months | 3 | 3 | 2 | 3 | 5 | 1 | P2 | Premium |
+| Category Group Customization | Parent/child or group editing | 3 | 3 | 3 | 3 | 4 | 2 | P2 | Premium |
+| Forecasting | Forward-looking cash flow projection | 3 | 3 | 3 | 4 | 5 | 1 | P3 | Premium |
+| Cloud Sync | Multi-device sync via account | 2 | 2 | 1 | 3 | 5 | 1 | P3 | Future/Optional |
+| Bank Import | Aggregated institution linking | 1 | 1 | 1 | 2 | 5 | 1 | Excluded | Not Supported |
+
+### 4.21 Priority Bucket Detail
+
+#### 4.21.1 P0 Features
+
+P0 features are mandatory for the first production launch because without them the product either fails to function, fails to differentiate, or fails to monetize.
+
+P0 set:
+
+- onboarding
+- fast manual transaction capture
+- transaction management
+- built-in categories
+- local smart categorization
+- monthly overview
+- core settings
+- RevenueCat entitlement handling
+
+P0 success condition:
+
+The user can install the app, understand the promise, enter transactions quickly, review a useful monthly summary, and optionally purchase premium, all without creating an account or relying on connectivity for core usage.
+
+#### 4.21.2 P1 Features
+
+P1 features strongly increase product depth, retention, and premium willingness-to-pay. They should ideally ship at launch if quality allows, and otherwise within the earliest post-launch milestone.
+
+P1 set:
+
+- custom categories
+- category budgets
+- recurring transactions
+- multi-currency
+- reports and charts
+- search and filters
+- CSV export
+
+P1 success condition:
+
+Committed users can shape the product around their real spending structure, reduce repetitive data entry, and extract deeper value than free tracking alone.
+
+#### 4.21.3 P2 Features
+
+P2 features are valuable but not essential to prove the product thesis.
+
+P2 set:
+
+- widgets
+- advanced filter presets
+- budget rollover
+- advanced category grouping tools
+
+These features should not delay launch quality in the core tracking stack.
+
+#### 4.21.4 P3 and Excluded Features
+
+P3 and excluded items represent deliberate restraint.
+
+P3 or excluded:
+
+- forecasting
+- cloud sync
+- bank import
+
+These areas either weaken positioning, introduce disproportionate complexity, or expand scope beyond the product's initial trust-based value proposition.
+
+### 4.22 Feature-by-Feature Strategic Notes
+
+#### 4.22.1 Why Transaction Capture Is the Primary Bet
+
+The product wins or loses on transaction capture quality more than any other single domain.
+
+Reasons:
+
+- it is the most frequent repeated action
+- it determines habit sustainability
+- it directly affects data completeness
+- it is the clearest place to outperform expectations for a manual app
+
+If transaction entry is slow, no amount of charts, branding, or premium framing will compensate.
+
+#### 4.22.2 Why Monthly Overview Is Free
+
+Users need a visible reward for logging data.
+If the monthly overview is weak or paywalled, the free product becomes a storage utility instead of a useful finance tool.
+
+The free product must produce insight, not just collection.
+
+#### 4.22.3 Why Budgets Are Premium
+
+Budgeting is valuable, but it is not necessary for basic tracking.
+Making budgets premium:
+
+- preserves a strong free experience
+- avoids crippling user trust
+- aligns with the product's "pay for deeper control" philosophy
+- creates clear upgrade motivation for committed users
+
+#### 4.22.4 Why Recurring Transactions Are Premium
+
+Recurring support delivers compounding convenience.
+Users with subscriptions, rent, paychecks, or repeated bills gain meaningful time savings, which makes it an appropriate premium differentiator.
+
+#### 4.22.5 Why CSV Export Is Premium but Still Strategically Essential
+
+Even though CSV export is premium in the monetization model, it remains central to product trust because exportability demonstrates respect for user ownership.
+
+This means export must be:
+
+- easy to discover
+- clearly documented
+- stable in format
+- not framed as a hostage-release feature
+
+#### 4.22.6 Why Bank Import Is Excluded
+
+Bank linking would:
+
+- weaken privacy positioning
+- add operational dependence on third parties
+- introduce connection failure and support burden
+- blur the product's anti-Mint, anti-surveillance narrative
+
+The absence of bank import is not a gap to apologize for. It is a defining product choice.
+
+### 4.23 Free Tier Experience Standards
+
+The free tier must feel complete enough that a skeptical user can rely on it for at least 30 days without feeling tricked.
+
+Free-tier minimum standard:
+
+- user can add unlimited manual transactions
+- user can view current and prior month summaries
+- user can use built-in categories without artificial limits
+- user can search and edit historical data
+- user is not forced into an account or trial
+
+The free tier must not feel like:
+
+- a demo
+- a countdown to a paywall
+- a crippled ledger
+- an onboarding funnel disguised as a product
+
+### 4.24 Premium Tier Experience Standards
+
+Premium must feel like a depth upgrade, not a rescue package.
+
+Premium value standard:
+
+- stronger planning through budgets
+- stronger personalization through custom categories
+- stronger maintenance efficiency through recurring transactions
+- stronger insight through charts and trends
+- stronger ownership through export
+- stronger convenience through widgets and multi-currency support
+
+Premium should answer the needs of users who:
+
+- log frequently
+- plan intentionally
+- travel or earn/spend across currencies
+- want richer monthly review
+- want the app to replace a spreadsheet workflow
+
+### 4.25 Monetization Fit Matrix
+
+| Capability | Free Tier Rationale | Premium Rationale | Final Decision |
+|---|---|---|---|
+| Manual transactions | Core product promise; cannot be restricted without collapsing trust | N/A | Free |
+| Basic categories | Needed to make tracking meaningful | Advanced customization can monetize | Free basic / Premium custom |
+| Monthly overview | Minimum visible value loop | Advanced insight layers can monetize | Free basic / Premium enhanced |
+| Transaction edit/delete | Ledger integrity requires it | N/A | Free |
+| Search/filter | Needed for long-term free usability | Advanced saved views can monetize later | Free |
+| Budgets | Helpful but not required for basic tracking | Strong planning value and conversion logic | Premium |
+| Recurring transactions | Nice-to-have for casual users | High leverage for committed users | Premium |
+| Multi-currency | Not essential for all users | Strong value for travel and international use | Premium |
+| CSV export | Not necessary for daily entry | Valuable ownership and interoperability feature | Premium |
+| Charts/trends | Basic overview already gives entry-level insight | Richer interpretation is premium-worthy | Premium |
+| Widgets | Convenience feature | Good premium enhancer | Premium |
+
+### 4.26 Sequencing Recommendation
+
+The recommended shipping sequence is:
+
+#### 4.26.1 Milestone 1: Trustworthy Core
+
+- onboarding
+- transaction capture
+- transaction list and edit
+- built-in categories
+- smart local categorization
+- monthly overview
+- settings basics
+- purchase flow scaffolding
+
+Objective:
+
+Prove the app is useful, fast, and credible as an offline-first manual tracker.
+
+#### 4.26.2 Milestone 2: Premium Depth
+
+- custom categories
+- budgets
+- recurring transactions
+- search and filters
+- charts and trends
+- CSV export
+- full entitlement gating
+
+Objective:
+
+Make premium compelling without compromising the free product's integrity.
+
+#### 4.26.3 Milestone 3: Convenience and Polish
+
+- widgets
+- advanced filter options
+- additional reporting surfaces
+- category structure enhancements
+- budget quality-of-life improvements
+
+Objective:
+
+Increase premium delight and retention after the core system is stable.
+
+### 4.27 Deprioritized and Rejected Feature Areas
+
+The product explicitly deprioritizes or rejects the following areas for the initial roadmap:
+
+- bank account linking
+- debt payoff coaching flows
+- investment portfolio aggregation
+- shared household cloud collaboration
+- social accountability features
+- receipt OCR as a primary entry model
+- complex tax categorization workflows
+- gamified streak systems that risk guilt-based usage
+
+Reasons for deprioritization:
+
+- weak fit with positioning
+- increased complexity
+- potential privacy erosion
+- support overhead disproportionate to user value
+- risk of diluting the manual-first core loop
+
+### 4.28 Success Criteria by Feature Domain
+
+| Domain | Success Indicator |
+|---|---|
+| Onboarding | Majority of new users can complete setup and add first transaction without external help |
+| Transaction Capture | Common entries can be saved in 5 to 15 seconds |
+| Transaction Management | Users can confidently correct mistakes without data ambiguity |
+| Categorization | Category suggestions reduce repeated manual selection over time |
+| Monthly Overview | Users can understand their month within 10 seconds of opening the app |
+| Budgets | Premium users can see category guardrails without learning a new budgeting doctrine |
+| Recurring | Repeated bills and income require dramatically less maintenance |
+| Reports | Users can detect changes in category behavior across periods |
+| Search/Filters | Historical lookup remains fast and legible beyond 1,000 transactions |
+| Export | Users can retrieve structured local data without lock-in concerns |
+| Paywall | Premium offer is understandable in under 30 seconds |
+| Widgets | Glanceable information adds convenience without replacing app clarity |
+
+### 4.29 Final Feature Definition Statement
+
+The core feature set for this product is intentionally centered on a narrow but high-value promise:
+
+**fast manual tracking, flexible budgeting, useful local insight, and durable privacy without bank linking or account dependence.**
+
+The prioritization framework reflects that promise.
+Features that directly strengthen trust, speed, clarity, and sustained habit formation are prioritized first.
+Features that add depth for committed users become premium.
+Features that weaken privacy posture, create infrastructure dependence, or push the product toward a bloated all-in-one finance platform are excluded or deferred.
