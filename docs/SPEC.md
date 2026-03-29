@@ -3496,3 +3496,1199 @@ The prioritization framework reflects that promise.
 Features that directly strengthen trust, speed, clarity, and sustained habit formation are prioritized first.
 Features that add depth for committed users become premium.
 Features that weaken privacy posture, create infrastructure dependence, or push the product toward a bloated all-in-one finance platform are excluded or deferred.
+
+## 5. Screen-by-Screen Descriptions: Onboarding Flow
+
+### 5.1 Purpose of Onboarding
+
+The onboarding flow exists to get a new user from first launch to first meaningful value in the shortest credible path possible.
+
+For this product, "meaningful value" means the user has completed all of the following:
+
+- understood that the app works without bank linking or account creation
+- chosen an initial operating context for budgets and reporting
+- created or accepted a basic category structure
+- entered at least one transaction or intentionally skipped to the dashboard with a clear next step
+- understood what is free versus premium without being blocked by a paywall
+
+The onboarding flow must be short enough to avoid abandonment, but complete enough to prevent confusion in the first session.
+
+Primary onboarding completion target:
+
+- 90th percentile time from first launch to dashboard: under 2 minutes 30 seconds
+
+Strong completion target:
+
+- 75% or more of new users complete onboarding and land on the dashboard
+
+First-value target:
+
+- 60% or more of new users save at least one transaction during onboarding or within the same first session
+
+### 5.2 Onboarding Principles
+
+The onboarding flow follows eight product rules:
+
+#### 5.2.1 No Mandatory Account Step
+
+There is no sign-up, log-in, email capture, password creation, or identity verification step.
+
+The product must not imply that an account is needed later for normal use.
+
+#### 5.2.2 No Bank Linking Prompt
+
+The onboarding flow must never ask the user to connect a bank, select a bank, import transactions from a financial institution, or grant finance-related aggregator permissions.
+
+This absence is part of the product value proposition and must be stated explicitly.
+
+#### 5.2.3 Explain the Model Early
+
+Within the first two screens, the user must understand:
+
+- the app is manual-first
+- data stays on device by default
+- the app is useful offline
+- smart categorization reduces repetitive work
+
+#### 5.2.4 Ask Only for Setup Inputs That Improve Immediate Utility
+
+Every onboarding question must materially affect:
+
+- defaults
+- calculations
+- category suggestions
+- reporting
+- reminders
+- future screens
+
+If a piece of information is not needed to improve the first-use experience, it must be deferred to Settings.
+
+#### 5.2.5 Default to a Guided Fast Path
+
+New users should be able to advance through the main flow with a small number of decisions.
+
+Recommended maximum number of decision-heavy setup screens before dashboard:
+
+- 4 required screens
+- 2 optional screens
+
+#### 5.2.6 Support Skipping Without Punishment
+
+Optional setup items such as notification permissions or advanced defaults must be skippable.
+
+Skipping must not produce fear-based warnings.
+
+#### 5.2.7 Demonstrate Value Before Selling Premium
+
+The onboarding flow may educate users on premium features, but it must not block the user behind a paywall before:
+
+- privacy model is understood
+- first workspace is initialized
+- first dashboard is accessible
+
+#### 5.2.8 End With Momentum, Not Configuration Fatigue
+
+The final onboarding action should place the user into a concrete task:
+
+- add first transaction
+- review monthly overview
+- set first budget
+
+The default recommendation is to push the user to add their first transaction immediately.
+
+### 5.3 Entry Conditions
+
+The onboarding flow is shown when all of the following are true:
+
+- app launches and the local install has not completed onboarding
+- no onboarding completion flag exists in local preferences storage
+
+The onboarding flow is not shown when:
+
+- the user has previously completed onboarding on the same local install
+- the app is restored from a device backup that preserved local state and the completion flag
+
+The onboarding completion flag is the primary visibility gate.
+
+Local profile/settings data may already exist if the user completed part of onboarding before closing the app.
+That partial data must not suppress onboarding before completion.
+
+If onboarding is interrupted:
+
+- progress is resumed from the last completed screen
+- partially completed inputs are restored
+- the user is never forced to restart from screen 1 unless local app data is deleted
+
+### 5.4 High-Level Onboarding Sequence
+
+Default sequence:
+
+1. Splash / Launch Initialization
+2. Welcome and Product Positioning
+3. Privacy and Offline Promise
+4. Setup Basics
+5. Starting Category Template
+6. Optional Notifications Setup
+7. First Transaction Prompt
+8. Transaction Create Screen
+9. Onboarding Completion Hand-off
+10. Dashboard
+
+Conditional optional sequence:
+
+1. Premium Education Card
+
+This appears only after the first transaction is saved or after the user reaches the dashboard, depending on experiment and monetization strategy. It is not part of the mandatory onboarding flow.
+
+### 5.5 Screen 1: Splash / Launch Initialization
+
+#### 5.5.1 Objective
+
+Communicate immediate responsiveness, initialize local storage, and determine whether onboarding or normal app entry should be shown.
+
+#### 5.5.2 Trigger
+
+App process start.
+
+#### 5.5.3 Duration
+
+Target visible time:
+
+- minimum: 400 milliseconds
+- preferred typical: 600 to 1200 milliseconds
+- maximum before fallback messaging: 2000 milliseconds
+
+#### 5.5.4 UI Contents
+
+- app mark
+- product name
+- short loading indicator
+- calm background treatment consistent with brand system
+
+No marketing carousel, no legal copy wall, no permissions prompt.
+
+#### 5.5.5 Background Tasks
+
+- open SQLite database
+- run pending migrations
+- initialize local settings store
+- check onboarding completion flag
+- preload default category templates
+- read stored theme preference or system theme
+- initialize RevenueCat SDK in non-blocking mode if premium infrastructure is enabled
+
+RevenueCat initialization must not delay onboarding rendering if network is unavailable.
+
+#### 5.5.6 Success Path
+
+If initialization succeeds and onboarding flag is false:
+
+- navigate to Welcome and Product Positioning
+
+If initialization succeeds and onboarding flag is true:
+
+- navigate to normal app entry
+
+#### 5.5.7 Failure States
+
+If SQLite initialization fails:
+
+- show blocking recovery screen with title "We couldn't open your local data"
+- primary action: `Try Again`
+- secondary action: `View Help`
+
+If a migration fails:
+
+- show blocking recovery screen with local-safe diagnostic message
+- do not expose raw SQL error by default
+- provide support code string generated locally
+
+### 5.6 Screen 2: Welcome and Product Positioning
+
+#### 5.6.1 Objective
+
+Establish the product category, differentiate from Mint-style bank-linked tools and YNAB-style rigid workflows, and reassure the user that setup will be quick.
+
+#### 5.6.2 Screen Role
+
+This is the first substantive onboarding screen.
+
+It must answer the question:
+
+Why is this app different, and why should the user trust the setup path?
+
+#### 5.6.3 Primary Message
+
+The message hierarchy should emphasize:
+
+- no bank linking
+- no account required
+- fully offline for core use
+- manual tracking made fast with smart categorization
+
+Recommended content structure:
+
+- headline
+- one-sentence supporting statement
+- three feature-proof bullets or cards
+
+#### 5.6.4 Example Content Direction
+
+Headline:
+
+**Money tracking without bank linking**
+
+Supporting copy:
+
+Track spending manually, keep your data on your device, and get clear monthly insight without accounts, sync requirements, or budgeting dogma.
+
+Proof points:
+
+- Works fully offline for everyday use
+- No sign-up or financial account connection
+- Smart category suggestions speed up manual entry
+
+#### 5.6.5 Primary Actions
+
+- primary CTA: `Set Up My App`
+- secondary CTA: `See How It Works`
+
+The secondary CTA opens a lightweight modal or bottom sheet with a 3-step explanation of the product loop:
+
+1. Add a transaction
+2. Categorize automatically or manually
+3. Review your month
+
+This secondary path must not derail onboarding and should dismiss back to the same screen.
+
+#### 5.6.6 Footer Content
+
+Optional footer line:
+
+`Free to start. Premium adds budgets, recurring transactions, charts, export, widgets, and more.`
+
+This line must be informational only and must not feel like a paywall.
+
+#### 5.6.7 Navigation Rules
+
+- back action from this screen exits onboarding and closes the app only on Android if system back is used
+- iOS does not display a back control here
+
+#### 5.6.8 Analytics Events
+
+- `onboarding_welcome_viewed`
+- `onboarding_welcome_primary_tapped`
+- `onboarding_welcome_secondary_tapped`
+
+### 5.7 Screen 3: Privacy and Offline Promise
+
+#### 5.7.1 Objective
+
+Convert privacy positioning from marketing language into operational clarity.
+
+This screen exists because the target audience includes:
+
+- users burned by bank-link fragility
+- users skeptical of finance surveillance
+- users who assume every finance app wants credentials or cloud access
+
+#### 5.7.2 Core User Questions to Answer
+
+- Where is my data stored?
+- Do I need an account?
+- Can I use this without internet?
+- What data leaves my device?
+
+#### 5.7.3 UI Structure
+
+- title
+- short explanatory paragraph
+- four reassurance cards or list rows
+- optional "Learn more" disclosure
+
+Suggested reassurance rows:
+
+- `Stored locally on this device`
+- `No bank accounts connected`
+- `No account required`
+- `Offline for core tracking and reports`
+
+#### 5.7.4 Learn More Disclosure
+
+If expanded, show concise additional detail:
+
+- purchases may use App Store / Play billing and RevenueCat for entitlement checks
+- export shares files only when the user explicitly chooses to export
+- notifications stay local to the device
+
+This content must be readable in under 20 seconds.
+
+#### 5.7.5 Actions
+
+- primary CTA: `Continue`
+- secondary text action: `Privacy Details`
+
+`Privacy Details` opens the full privacy policy screen or local webview if policy content is bundled.
+
+#### 5.7.6 Design Requirements
+
+- iconography must signal safety and local control without looking like security software
+- avoid fear-inducing red or alarm styling
+- maintain calm visual tone
+
+#### 5.7.7 Exit Criteria
+
+The user should leave this screen with no unresolved assumption that:
+
+- cloud sync is required
+- bank linking is missing temporarily
+- account creation comes later as a mandatory step
+
+### 5.8 Screen 4: Setup Basics
+
+#### 5.8.1 Objective
+
+Collect the minimum configuration required for meaningful budgeting, summaries, and defaults.
+
+#### 5.8.2 Inputs
+
+Required inputs:
+
+- primary currency
+- month start preference
+
+Optional inputs:
+
+- locale-specific number formatting confirmation when ambiguous
+- first budget month start hint
+
+Explicitly excluded from onboarding:
+
+- income target
+- savings target
+- debt balances
+- account list setup
+- custom category tree creation from scratch
+
+These may be supported later elsewhere, but they are not part of the onboarding fast path.
+
+#### 5.8.3 Layout
+
+Single screen with stacked form sections.
+
+Section 1:
+
+- label: `Primary currency`
+- control: searchable picker
+- default: derived from device locale if confidence is high
+
+Section 2:
+
+- label: `Monthly cycle starts on`
+- control: segmented option group
+- options:
+  - `1st of month`
+  - `Custom day`
+
+If `Custom day` is selected:
+
+- show numeric day selector 1 through 28
+
+For initial release, reporting should aggregate to predictable monthly periods.
+The onboarding flow supports only:
+
+- `1st of month`
+- `Custom day`
+
+#### 5.8.4 Validation Rules
+
+Primary currency:
+
+- required
+- must be a supported ISO 4217 currency code present in local seed data
+
+Month start:
+
+- required
+- valid custom day range: 1 to 28
+
+If the device locale currency is unsupported or ambiguous:
+
+- no preselection
+- inline helper text: `Choose the currency you spend in most often. You can add more later with Premium.`
+
+#### 5.8.5 Defaults
+
+Recommended defaults:
+
+- currency: device locale currency
+- month start: `1st of month`
+
+#### 5.8.6 Actions
+
+- primary CTA: `Continue`
+- back CTA in header: returns to Privacy and Offline Promise
+
+#### 5.8.7 Persisted Data
+
+Save to local profile/settings:
+
+- `base_currency_code`
+- `budget_cycle_type`
+- `budget_cycle_start_day`
+- `locale_format_source`
+
+#### 5.8.8 Rationale
+
+These values are necessary because they influence:
+
+- dashboard totals
+- monthly overview grouping
+- budget reset logic
+- chart labels
+- transaction amount formatting
+- export consistency
+
+### 5.9 Screen 5: Starting Category Template
+
+#### 5.9.1 Objective
+
+Prevent blank-slate paralysis and establish a usable category system immediately.
+
+#### 5.9.2 User Problem
+
+Manual finance apps fail early when users are forced to invent a taxonomy before seeing value.
+
+The product must ship with a practical starter template.
+
+#### 5.9.3 Default Template Strategy
+
+Present one recommended category template by default and allow a lightweight alternative.
+
+Options:
+
+- `Simple Starter` recommended
+- `Detailed Starter`
+
+`Build My Own` is not recommended in onboarding and should be offered only as a low-emphasis text action.
+
+#### 5.9.4 Simple Starter Template
+
+Suggested top-level categories:
+
+- Housing
+- Groceries
+- Dining
+- Transportation
+- Shopping
+- Health
+- Entertainment
+- Bills
+- Income
+- Transfers
+- Other
+
+Suggested design note:
+
+The onboarding UI may call these "categories," even if the internal data model supports groups and subcategories.
+
+#### 5.9.5 Detailed Starter Template
+
+Suggested categories:
+
+- Rent or Mortgage
+- Utilities
+- Internet and Phone
+- Groceries
+- Dining Out
+- Coffee and Snacks
+- Gas
+- Public Transit
+- Car Maintenance
+- Shopping
+- Health and Pharmacy
+- Subscriptions
+- Entertainment
+- Travel
+- Salary
+- Freelance Income
+- Gifts
+- Fees
+- Transfers
+- Miscellaneous
+
+#### 5.9.6 Template Screen Layout
+
+- title: `Start with categories that already make sense`
+- short helper text
+- option cards with preview chip lists
+- expandable "You can rename or add categories later"
+
+#### 5.9.7 Behavior
+
+When the user selects a template:
+
+- template card shows selected state
+- local seeded categories are copied into user category tables
+- this happens only after the user taps `Continue`, not on selection
+
+#### 5.9.8 Actions
+
+- primary CTA: `Continue`
+- secondary text action: `Start With Just Basics`
+
+`Start With Just Basics` creates a minimal category set:
+
+- Income
+- Bills
+- Food
+- Transport
+- Shopping
+- Other
+
+This option is intended for users who dislike over-organization.
+
+#### 5.9.9 Validation
+
+One category strategy must be selected before advancing.
+
+Default selection:
+
+- `Simple Starter`
+
+#### 5.9.10 Persisted Data
+
+- chosen template identifier
+- generated category records
+- default sort order
+- default category icon/color mapping
+
+### 5.10 Screen 6: Optional Notifications Setup
+
+#### 5.10.1 Objective
+
+Offer lightweight habit support without making notifications feel mandatory or manipulative.
+
+#### 5.10.2 Placement
+
+This screen comes after categories and before the first transaction prompt.
+
+It is optional and skippable.
+
+#### 5.10.3 Messaging
+
+Headline:
+
+**Stay on top of your month without constant checking**
+
+Support copy:
+
+Get gentle reminders to add missing transactions or review your monthly spending. Notifications are optional and stay on this device.
+
+#### 5.10.4 Option Set
+
+Preset toggles:
+
+- `Daily reminder`
+- `Weekly review`
+- `End-of-month check-in`
+
+Default state:
+
+- all off
+
+Recommended default suggestion:
+
+- visually recommend `Weekly review`
+
+The app must not pre-enable notifications before OS permission is granted.
+
+#### 5.10.5 Permission Strategy
+
+Use a two-step pattern:
+
+1. In-app explanation screen
+2. OS permission prompt only after explicit user action
+
+Primary CTA states:
+
+- if any reminder is selected: `Enable Notifications`
+- if none selected: `Skip For Now`
+
+If the user taps `Enable Notifications`:
+
+- trigger OS notification permission prompt
+
+If permission is granted:
+
+- create corresponding local reminder schedules
+
+If permission is denied:
+
+- show brief inline state: `Notifications are off. You can turn them on later in Settings.`
+- allow continuation without retry loop
+
+#### 5.10.6 Secondary Action
+
+- text action: `Not Now`
+
+#### 5.10.7 Persisted Data
+
+- reminder preference selections
+- permission status
+- local schedule metadata if enabled
+
+### 5.11 Screen 7: First Transaction Prompt
+
+#### 5.11.1 Objective
+
+Convert onboarding from setup into action by guiding the user through the first transaction entry immediately.
+
+This is the most important onboarding screen for habit formation.
+
+#### 5.11.2 Strategic Importance
+
+If the user completes setup but never records a transaction, the app risks becoming another abandoned utility.
+
+The first transaction flow must feel:
+
+- fast
+- obvious
+- non-intimidating
+- representative of the ongoing experience
+
+#### 5.11.3 Screen Structure
+
+The screen should act as a guided transition, not a full lecture.
+
+Layout:
+
+- title
+- short explanation
+- preview of what happens next
+- primary CTA to open transaction composer
+- secondary CTA to go straight to dashboard
+
+Suggested title:
+
+**Add your first transaction**
+
+Suggested support copy:
+
+Most people know within one entry whether a budget app will stick. Start with your last purchase, bill, or paycheck.
+
+Preview checklist:
+
+- amount
+- merchant or note
+- suggested category
+- save
+
+#### 5.11.4 Actions
+
+- primary CTA: `Add Transaction`
+- secondary CTA: `Go To Dashboard`
+
+#### 5.11.5 Secondary Path Rules
+
+If the user selects `Go To Dashboard`:
+
+- onboarding still completes
+- dashboard opens with a prominent empty-state CTA to add the first transaction
+- system should store flag `first_transaction_skipped_during_onboarding = true`
+
+#### 5.11.6 Guided Composer Behavior
+
+Tapping `Add Transaction` opens the standard transaction create screen in a guided state.
+
+Prefilled defaults:
+
+- date: today
+- type: expense
+- currency: base currency
+- category: none selected initially, but suggestions visible after merchant/title input
+
+Visible fields in initial folded state:
+
+- amount
+- merchant / description
+- category
+- date
+
+Advanced fields hidden behind expand affordance:
+
+- note
+- recurring toggle
+- currency override if premium enabled
+
+#### 5.11.7 Suggested Empty Prompts
+
+Merchant placeholder:
+
+- `Coffee, rent, salary, groceries...`
+
+Amount placeholder:
+
+- `0.00`
+
+Category helper:
+
+- `We'll suggest one based on what you type.`
+
+#### 5.11.8 First Transaction Success Rules
+
+After save:
+
+- show lightweight success confirmation
+- update local overview totals immediately
+- mark `first_transaction_created_at`
+- set onboarding completion flag if not already set
+- navigate to onboarding completion hand-off screen or directly to dashboard depending on selected flow variant
+
+#### 5.11.9 If User Abandons Composer
+
+If the user dismisses the composer without saving:
+
+- return to First Transaction Prompt
+- preserve any partially typed values for the current session only
+
+### 5.12 Embedded Flow: First Transaction Create Screen During Onboarding
+
+#### 5.12.1 Objective
+
+Expose the real transaction creation experience, not a fake demo.
+
+The onboarding-specific difference is guidance, not a separate code path for saving financial data.
+
+#### 5.12.2 Required Fields
+
+- transaction type
+- amount
+- date
+
+Required for quality but not hard-blocking if fallback exists:
+
+- merchant or description
+
+Category handling:
+
+- user may save uncategorized only if product policy permits
+- recommended release behavior: require category before save
+
+If category is required:
+
+- the app should aggressively assist with defaults and suggestions to minimize friction
+
+#### 5.12.3 Transaction Type Control
+
+Visible options:
+
+- `Expense`
+- `Income`
+- `Transfer`
+
+Default:
+
+- `Expense`
+
+If `Transfer` is not fully supported in the initial model, hide it during onboarding and show:
+
+- `Expense`
+- `Income`
+
+#### 5.12.4 Smart Categorization During Onboarding
+
+As the user types a merchant/title:
+
+- run local pattern matching against seed rules and any existing user-created patterns
+- rank likely categories
+- show top 3 suggestions
+
+Examples:
+
+- "Starbucks" suggests Dining or Coffee and Snacks
+- "Whole Foods" suggests Groceries
+- "Rent" suggests Rent or Mortgage / Housing
+- "Payroll" suggests Salary / Income
+
+If there is high-confidence match:
+
+- auto-select suggestion with visible confirmation chip
+
+If low-confidence:
+
+- show suggestions but do not auto-select
+
+#### 5.12.5 Validation Rules
+
+Amount:
+
+- required
+- must be greater than 0
+- maximum single-entry amount supported by UI: 9,999,999.99
+
+Date:
+
+- required
+- default today
+- allowed manual backdating
+
+Description:
+
+- optional but strongly encouraged
+
+Category:
+
+- required for expense and income if supported model expects categorized analytics
+
+#### 5.12.6 Error States
+
+Inline errors only. No modal errors for field validation.
+
+Examples:
+
+- `Enter an amount greater than 0`
+- `Choose a category`
+- `Date can't be empty`
+
+#### 5.12.7 Save Interaction
+
+Save CTA label:
+
+- `Save Transaction`
+
+Loading state:
+
+- button disabled
+- spinner visible in button
+- save should typically complete in under 150 milliseconds on a normal device
+
+#### 5.12.8 Post-Save Feedback
+
+Success surface:
+
+- toast or inline banner: `Transaction saved`
+
+Optional assistive follow-up:
+
+- `Category learned for similar entries`
+
+This line should only appear if the app has actually stored a local pattern or strengthened a merchant-category association.
+
+### 5.13 Screen 8: Onboarding Completion Hand-off
+
+#### 5.13.1 Objective
+
+Close onboarding cleanly and orient the user to the dashboard.
+
+#### 5.13.2 When Shown
+
+Show this screen only if:
+
+- user saved first transaction during onboarding
+
+If the user skipped transaction creation:
+
+- navigate directly to dashboard empty state instead
+
+#### 5.13.3 Content
+
+Headline:
+
+**You're ready**
+
+Supporting copy:
+
+Your monthly overview is set up locally on this device. You can keep adding transactions, review your categories, and upgrade later if you want budgets, recurring transactions, export, charts, widgets, and more.
+
+Summary chips:
+
+- base currency
+- selected monthly cycle
+- number of starting categories
+- first transaction amount and category if just saved
+
+#### 5.13.4 Primary CTA
+
+- `Open My Dashboard`
+
+#### 5.13.5 Secondary CTA
+
+- `See Premium Features`
+
+This secondary action opens a non-blocking premium feature sheet.
+
+It must not interrupt dashboard access.
+
+### 5.14 Dashboard Landing State After Onboarding
+
+#### 5.14.1 If User Added a First Transaction
+
+Dashboard should show:
+
+- current month spending summary populated
+- recent transaction list with the new item at top
+- category snapshot with at least one non-zero row if applicable
+- low-friction CTA for adding another transaction
+
+Optional celebratory treatment:
+
+- subtle confirmation animation under 600 milliseconds
+
+No gamified streak language.
+
+#### 5.14.2 If User Skipped First Transaction
+
+Dashboard should show an informed empty state:
+
+Headline:
+
+**Start with one transaction**
+
+Support copy:
+
+Add a purchase, bill, or paycheck to see your month take shape.
+
+Primary CTA:
+
+- `Add Transaction`
+
+Secondary CTA:
+
+- `Browse Categories`
+
+#### 5.14.3 If Notifications Were Denied
+
+Do not show a warning banner on first dashboard load.
+
+Notification upsell belongs in Settings or a later reminder preference entry point.
+
+### 5.15 Navigation Map for Onboarding
+
+Primary forward path:
+
+1. Splash / Launch Initialization
+2. Welcome and Product Positioning
+3. Privacy and Offline Promise
+4. Setup Basics
+5. Starting Category Template
+6. Optional Notifications Setup
+7. First Transaction Prompt
+8. Transaction Create Screen
+9. Onboarding Completion Hand-off
+10. Dashboard
+
+Skip path:
+
+1. Splash / Launch Initialization
+2. Welcome and Product Positioning
+3. Privacy and Offline Promise
+4. Setup Basics
+5. Starting Category Template
+6. Optional Notifications Setup skipped
+7. First Transaction Prompt
+8. Go To Dashboard
+9. Dashboard empty state
+
+Back navigation rules:
+
+- from Privacy screen, back returns to Welcome
+- from Setup Basics, back returns to Privacy
+- from Category Template, back returns to Setup Basics
+- from Notifications, back returns to Category Template
+- from First Transaction Prompt, back returns to Notifications or Category Template if notifications were skipped
+- from embedded Transaction Create Screen, back returns to First Transaction Prompt without data loss for current session
+
+### 5.16 Data Created During Onboarding
+
+At onboarding completion, the app should have created the following local records as applicable:
+
+- user profile row
+- app settings row
+- base currency setting
+- budget cycle setting
+- selected category template metadata
+- seeded category rows
+- local onboarding progress and completion flags
+- reminder preference rows if notifications were enabled
+- first transaction row if created
+- merchant-category suggestion seed or learned pattern if applicable
+
+No cloud record is created.
+No user credential is created.
+No bank authorization token is created.
+
+### 5.17 Onboarding State Machine
+
+Recommended local progress model:
+
+- `onboarding_last_completed_step`
+
+Recommended values for `onboarding_last_completed_step`:
+
+- `not_started`
+- `welcome_completed`
+- `privacy_completed`
+- `basics_completed`
+- `category_template_completed`
+- `notifications_completed`
+- `first_transaction_prompt_completed`
+- `first_transaction_created`
+- `completion_handoff_completed`
+
+Auxiliary booleans or timestamps:
+
+- `notification_prompt_shown_at`
+- `notification_permission_status`
+- `first_transaction_created_at`
+- `first_transaction_skipped_during_onboarding`
+- `onboarding_completed_at`
+
+### 5.18 Copy Tone Requirements
+
+All onboarding copy must feel:
+
+- calm
+- practical
+- privacy-literate
+- non-judgmental
+- non-financial-jargon-heavy
+
+The copy must not:
+
+- shame the user for past habits
+- imply that financial wellness requires perfection
+- imply that premium is necessary for the app to be useful
+- use startup-style hype language
+- suggest surveillance as convenience
+
+### 5.19 Accessibility Requirements for Onboarding
+
+Each onboarding screen must support:
+
+- Dynamic Type / large font scaling without clipped primary actions
+- screen reader labels for all controls
+- minimum 44 by 44 point touch targets
+- focus order that follows visual layout
+- sufficient contrast in light and dark themes
+- reduced motion alternatives for any transitions
+
+Illustrations must have either:
+
+- meaningful accessibility labels if informative
+- hidden-from-accessibility status if decorative
+
+### 5.20 Performance Requirements for Onboarding
+
+Screen transition performance targets on a representative mid-range device:
+
+- forward navigation response under 100 milliseconds after tap
+- local form saves under 100 milliseconds
+- first transaction save reflected in dashboard in under 250 milliseconds
+
+The onboarding flow must remain fully functional:
+
+- offline
+- on low battery mode
+- after app background/foreground interruption
+
+### 5.21 Localization Requirements for Onboarding
+
+All onboarding content must support localization, including:
+
+- currency names
+- date and number examples
+- pluralization
+- right-to-left layout compatibility
+
+Text containers must tolerate 30% expansion without truncating primary meaning.
+
+### 5.22 Monetization Behavior Within Onboarding
+
+The onboarding flow must educate, not pressure.
+
+Allowed monetization behaviors:
+
+- small informational premium mention on welcome screen
+- premium feature mention on completion screen
+- optional non-blocking premium sheet after onboarding
+
+Disallowed monetization behaviors:
+
+- hard paywall before dashboard access
+- forced trial before using free features
+- obscuring what is free
+- interrupting the first transaction flow with a purchase prompt
+
+### 5.23 Edge Cases
+
+#### 5.23.1 App Closed Mid-Onboarding
+
+Expected behavior:
+
+- restore to last incomplete screen
+- preserve entered basics form values
+- preserve selected template
+
+#### 5.23.2 App Closed After First Transaction Saved but Before Completion Screen
+
+Expected behavior:
+
+- treat onboarding as completed
+- next launch opens dashboard
+
+#### 5.23.3 Device Offline During Entire Onboarding
+
+Expected behavior:
+
+- no degraded setup path
+- RevenueCat initialization failure must remain silent unless the user explicitly opens premium purchase UI
+
+#### 5.23.4 Notifications Permission Previously Denied at OS Level
+
+Expected behavior:
+
+- in-app screen explains reminders
+- tapping enable should route to system behavior appropriately
+- if OS blocks prompt, show `Open Settings` action instead of repeated failed requests
+
+#### 5.23.5 User Chooses Premium-Only Feature Expectation Early
+
+Example:
+
+- user expects multi-currency at setup
+
+Expected behavior:
+
+- onboarding keeps a single base currency setup
+- lightweight note explains that additional currencies are available with Premium later
+
+### 5.24 Success Metrics for the Onboarding Flow
+
+Primary metrics:
+
+- onboarding start rate
+- onboarding completion rate
+- first transaction creation rate
+- median time to first transaction
+- dashboard reach rate
+
+Secondary metrics:
+
+- notification opt-in rate
+- category template selection distribution
+- skip rate at each screen
+- premium feature sheet open rate after onboarding
+
+Qualitative success indicators:
+
+- users describe onboarding as clear, calm, and not invasive
+- users accurately understand that there is no bank linking
+- users can explain the difference between free and premium after first use
+
+### 5.25 Final Onboarding Definition
+
+The onboarding flow for this product is a short, privacy-forward, local-first setup sequence that introduces the app's core promise, captures only high-value defaults, seeds a usable category system, optionally enables reminders, and pushes the user directly into their first transaction.
+
+Its job is not to impress with feature volume.
+Its job is to remove skepticism, reduce blank-state friction, and create immediate confidence that this is a finance app the user can actually live with.
