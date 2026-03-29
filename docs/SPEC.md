@@ -6866,3 +6866,829 @@ Behavioral indicators of success:
 ### 6.16 Final Definition
 
 The transaction entry and editing experience is the product's highest-stakes screen family: a fast, local-first capture and correction workflow that turns manual logging into a sustainable habit by making amounts easy to enter, categories easy to confirm, mistakes easy to fix, and every save immediate, private, and dependable.
+
+## 7. Screen-by-Screen Descriptions: Categories and Budgets
+
+### 7.1 Purpose of the Categories and Budgets Experience
+
+The categories and budgets screen family defines how the user gives structure to their spending data after transactions have been captured.
+
+This part of the product must solve two related but distinct jobs:
+
+- help users maintain a category system that is easy enough to understand at a glance
+- help premium users assign monthly spending targets without being forced into an ideology-heavy workflow
+
+Categories are the organizing layer for all spending insight. Budgets are the optional planning layer built on top of categories.
+
+The screen family must work for three usage levels:
+
+- free users who rely on default categories and only need to review categorized spending
+- premium users who want to create, edit, archive, reorder, and personalize categories
+- premium users who want to set, monitor, and adjust category budgets month by month
+
+The experience must feel flexible, calm, and practical. It should not resemble accounting software, and it should not mimic strict envelope-budgeting systems that force ceremony before value appears.
+
+### 7.2 Product Role and Strategic Importance
+
+This screen family is strategically important because it turns a raw transaction log into a system the user can actually reason about.
+
+Without strong category management:
+
+- reports become noisy
+- dashboard summaries lose usefulness
+- recurring transactions inherit poor defaults
+- budgeting becomes frustrating
+- manual entry becomes harder because suggestions have no reliable destination structure
+
+Without clear budget management:
+
+- premium value weakens
+- the product loses an important upgrade trigger for Mint refugees
+- users cannot move from passive awareness to active planning
+
+This area therefore has two business roles:
+
+- support the core free habit by keeping categorization understandable
+- justify premium conversion with useful customization and lightweight planning
+
+### 7.3 Primary User Jobs
+
+Users come to these screens to complete one or more of the following jobs:
+
+- review which categories exist and whether they match how they think about money
+- create a missing category for a recurring real-life need
+- rename, recolor, or archive a category that no longer fits
+- see which categories are spending-heavy this month
+- assign a monthly budget to one or more categories
+- check whether a category is on track, close to limit, or over limit
+- adjust a budget mid-month after plans change
+- understand whether uncategorized transactions are preventing accurate totals
+
+### 7.4 Experience Principles
+
+The categories and budgets screens must follow these principles:
+
+#### 7.4.1 Structure Before Complexity
+
+The app should present the category system as understandable in under 30 seconds. Users should not need to open multiple screens to answer:
+
+- what categories do I have
+- which ones are default vs custom
+- which ones have active budgets
+- which ones are archived
+
+#### 7.4.2 Budgets Are Optional, Not Foundational
+
+The user must be able to use the app fully without ever creating a budget.
+
+Budget UI should therefore:
+
+- never block category management
+- never appear as a required setup checkpoint
+- never imply the user is failing if budgets are unused
+
+#### 7.4.3 One Category, One Source of Truth
+
+Category edits must propagate across:
+
+- past transactions
+- current month totals
+- report aggregations
+- budget links
+- suggestion memory where applicable
+
+The user should not have to repair multiple disconnected records after a category change.
+
+#### 7.4.4 Premium Gating Must Be Honest
+
+Free users can view and use the default category system during transaction entry and overview flows.
+
+Premium is required for:
+
+- creating custom categories
+- editing default category names
+- assigning budgets
+- creating multiple budgets across categories
+- using advanced budget insights tied to charts and trends
+
+Locked actions should always show the benefit before the paywall, not just the restriction.
+
+### 7.5 Information Architecture Overview
+
+This screen family consists of four primary screens and several supporting surfaces:
+
+- Screen 12: Categories Overview
+- Screen 13: Create / Edit Category
+- Screen 14: Budgets Overview
+- Screen 15: Create / Edit Budget
+
+Supporting surfaces:
+
+- category picker bottom sheet from transaction entry
+- budget progress card on dashboard linking into budget detail context
+- archive confirmation modal
+- delete or merge category warning modal
+- premium paywall sheet for locked customization and budgeting actions
+- month selector sheet for budget period navigation
+
+### 7.6 Entry Points Into the Flow
+
+Users may enter this screen family from several places:
+
+- bottom tab or primary navigation item labeled `Categories`
+- settings path for category management
+- dashboard card labeled `Budgets`
+- tapping a budget progress ring on the dashboard
+- tapping `Manage Categories` from the transaction composer category picker
+- tapping a category chip or total from a monthly overview section
+- paywall upsell path after attempting to create a custom category or budget
+
+Expected entry frequency:
+
+- categories overview: weekly to monthly for most users
+- category create/edit: ad hoc, commonly during initial setup or after classification friction
+- budgets overview: weekly for active premium users, monthly for casual planners
+- budget create/edit: monthly during setup or plan changes
+
+### 7.7 Screen Pattern and Presentation Model
+
+Categories and budgets are related but not identical. The UI should separate them into distinct top-level screens rather than combining them into a single overloaded management page.
+
+Recommended navigation model:
+
+- `Categories` screen accessible directly from main navigation
+- `Budgets` screen accessible as its own top-level destination for premium users
+- free users may see a locked `Budgets` destination with clear value framing, or a dashboard card entry into a paywall preview depending on final navigation design
+
+Presentation behavior:
+
+- overview screens use full-screen native stack pages
+- create and edit actions open as full-screen modal sheets on phones for focus and keyboard stability
+- confirmation dialogs use native-style alert or custom modal depending on action severity
+
+### 7.8 Screen 12: Categories Overview
+
+#### 7.8.1 Purpose
+
+The Categories Overview screen is the control center for the user's spending taxonomy.
+
+It must help the user:
+
+- understand the current category set
+- identify the most-used categories
+- spot uncategorized or poorly categorized activity
+- access create, edit, archive, and reorder actions
+
+#### 7.8.2 Header and Top Region
+
+Header content:
+
+- title: `Categories`
+- optional subtitle showing active category count, for example `18 active`
+- top-right action: `New` for premium users, locked plus icon for free users
+
+Directly below the header, the screen should present a summary strip with 2 to 3 compact metrics:
+
+- `Active categories`
+- `Used this month`
+- `Uncategorized transactions`
+
+If the app has 0 uncategorized transactions, the uncategorized metric should show a positive neutral state such as `0 uncategorized`.
+
+If uncategorized count is greater than 0, the metric must become tappable and route to a filtered transaction list in the future flow, but in this screen it should still visually signal that category health is incomplete.
+
+#### 7.8.3 Main List Structure
+
+The main content is a sectioned list with these default groups:
+
+- expense categories
+- income categories
+- archived categories
+
+If the product does not expose income categories separately in v1 navigation, the internal grouping still exists and should be ready in the data model, but only visible when at least 1 income category has transactions or a user-created income category exists.
+
+Each active category row includes:
+
+- category icon
+- category name
+- optional small label: `Default` or `Custom`
+- current month spend or income total in the user's primary currency
+- optional budget status chip if a budget exists for the selected month
+- chevron indicating row tap opens detail/edit
+
+Row behavior:
+
+- single tap opens category detail/edit screen
+- long press opens quick actions menu with `Edit`, `Archive`, and `Move`
+- drag handle for reordering is visible only in edit-order mode
+
+#### 7.8.4 Sorting and Organization Rules
+
+Default list sort order for active categories:
+
+1. user-pinned manual order if set
+2. otherwise system default order from onboarding template
+
+The user may switch visible sort mode through a compact filter control:
+
+- `Manual`
+- `Name`
+- `Most used`
+- `Highest spend this month`
+
+Sort choice persists locally per device and should apply instantly in under 100 milliseconds for lists up to 120 categories.
+
+#### 7.8.5 Search and Filter Behavior
+
+A local search field appears above the list once the user has more than 12 active categories, or immediately when the user taps a search icon.
+
+Search matches:
+
+- category name
+- archived category name
+- recent transaction titles strongly associated with the category
+
+Filter chips:
+
+- `All`
+- `With budget`
+- `No budget`
+- `Archived`
+- `Unused this month`
+
+Free users can still use search and filters for visibility even if they cannot create or edit custom categories.
+
+#### 7.8.6 Empty and Sparse States
+
+Common states:
+
+1. Standard populated state  
+   The user sees at least 1 active category with normal controls.
+
+2. Low-data state  
+   The user has categories but fewer than 5 transactions total. Show guidance copy such as `Categories become smarter as you log spending`.
+
+3. No custom categories state for premium user  
+   Show a contextual prompt: `Create categories that match your life, like Pet Care or Side Hustle`.
+
+4. No categories available due to corruption or migration failure  
+   This should be extremely rare. Show a recovery state with `Restore defaults` and a non-destructive explanation.
+
+#### 7.8.7 Category Row Detail Content
+
+Tapping a category row opens a detail-style edit screen, but before navigation the row itself should already answer:
+
+- what the category is called
+- whether the user can edit it
+- how much activity it has this month
+- whether a budget is attached
+
+If a category has 0 transactions in the current month, show `No activity this month` rather than a zero amount if that improves readability in the design system.
+
+#### 7.8.8 Premium Lock Behavior on Screen 12
+
+For free users:
+
+- the `New Category` action is visible but locked
+- editing controls on default categories are visible on entry but disabled once tapped through a paywall explainer
+- archived category restoration is locked if archive itself required premium creation flow
+
+The lock presentation should say what Premium unlocks:
+
+- create custom categories
+- rename and personalize categories
+- connect categories to budgets
+
+The lock must not imply that existing categories stop working in the free tier.
+
+### 7.9 Screen 13: Create / Edit Category
+
+#### 7.9.1 Purpose
+
+This screen allows premium users to create a new category or modify an existing one without complexity.
+
+It must support fast completion in under 20 seconds for common edits.
+
+#### 7.9.2 Modes
+
+The screen has four modes:
+
+- create custom expense category
+- create custom income category
+- edit existing category
+- view-only locked preview for free users
+
+Mode changes the title and available actions:
+
+- `New Category`
+- `Edit Category`
+- `Premium Required`
+
+#### 7.9.3 Form Fields
+
+Required fields:
+
+- category name
+- category type: `Expense` or `Income`
+
+Optional or configurable fields:
+
+- icon
+- color
+- parent group if grouped taxonomy is used internally
+- include in budgets toggle for expense categories
+- archive status toggle on edit only
+
+Validation rules:
+
+- name length minimum: 1 non-space character
+- name length maximum: 40 characters
+- duplicate active names within the same type are disallowed
+- archived category names may be reused only after user confirmation
+
+#### 7.9.4 Smart Defaults
+
+When opened from transaction entry after the user typed a new category name:
+
+- category name prefilled from the typed text
+- type defaults based on transaction type
+- icon and color suggested from nearest matching local category patterns
+
+When opened from the categories overview `New` button:
+
+- blank name
+- default type `Expense`
+- default icon generic tag or folder variant
+- default color from theme-safe category palette
+
+#### 7.9.5 Save and Cancel Behavior
+
+Primary action:
+
+- `Save Category`
+
+Secondary action:
+
+- back navigation or `Cancel`
+
+Unsaved changes behavior:
+
+- if the user modified any field and attempts to leave, show a discard confirmation
+- confirmation options: `Keep Editing` and `Discard Changes`
+
+Save side effects:
+
+- category appears immediately in local list
+- transaction composer category picker reflects the new category without reload
+- suggestion engine is updated for future entries
+- linked budget prompts may appear if the category is expense-type and the user is premium
+
+#### 7.9.6 Editing Existing Categories
+
+Editable fields depend on category origin:
+
+- default categories: name, icon, color editable for premium users
+- custom categories: all applicable fields editable
+- system-reserved categories such as uncategorized, if present, are not editable beyond display options
+
+If an edited category is already used by transactions:
+
+- renaming changes historical labels everywhere immediately
+- changing icon or color affects all historical references
+- changing type from expense to income is blocked when incompatible transactions exist
+
+#### 7.9.7 Archive, Delete, and Merge Logic
+
+Archive is preferred over delete.
+
+Archive behavior:
+
+- removes the category from default pickers for new transactions
+- preserves historical transaction links
+- preserves historical report integrity
+- hides the category from active lists unless archived filter is enabled
+
+Delete behavior:
+
+- allowed only for custom categories with 0 linked transactions and 0 linked recurring templates
+- if linked data exists, delete is replaced by `Archive` or `Merge`
+
+Merge behavior:
+
+- user selects destination category
+- all linked transactions and budgets move to destination
+- source category becomes archived automatically
+
+Merge should be used cautiously because it changes reporting history labels in a user-visible way.
+
+#### 7.9.8 Contextual Prompts After Save
+
+After creating an expense category, the app may show one contextual next step:
+
+- `Add budget for this category`
+- `Use this category in your next transaction`
+
+Only one prompt should be shown, and it should never interrupt with a mandatory modal if the user is mid-capture flow.
+
+### 7.10 Screen 14: Budgets Overview
+
+#### 7.10.1 Purpose
+
+The Budgets Overview screen gives premium users a month-based planning view across all budgeted categories.
+
+It must answer four questions immediately:
+
+- how much total budget is set this month
+- how much has been spent against those budgets
+- which categories are on track
+- which categories need attention
+
+#### 7.10.2 Access Model
+
+Budgets are a premium feature.
+
+Access states:
+
+1. Premium active  
+   Full screen available.
+
+2. Free user with locked preview  
+   Show sample explanatory layout, not real editable controls.
+
+3. Premium entitlement temporarily offline but cached active  
+   Full access remains available.
+
+4. Premium expired or unavailable after grace rules  
+   Existing budgets remain visible read-only for a defined grace window if product policy chooses, but editing and creation are locked. The visibility rule must be consistent with monetization policy and should not hide historical budget outcomes.
+
+#### 7.10.3 Header and Month Selector
+
+Header content:
+
+- title: `Budgets`
+- month selector centered or directly under header
+- top-right action: `New Budget`
+
+Month selector behavior:
+
+- default month is current local month
+- swipe or tap arrows to move one month backward or forward
+- dedicated month picker sheet allows jumping up to 24 months back and 12 months forward
+
+Month change updates:
+
+- total budgeted amount
+- total spent
+- category progress rows
+- over-budget count
+- remaining amount
+
+All updates must be local and complete in under 150 milliseconds on typical devices.
+
+#### 7.10.4 Summary Cards
+
+The top of the screen contains 3 summary cards:
+
+- `Budgeted`
+- `Spent`
+- `Remaining` or `Over`
+
+If total spent exceeds total budget:
+
+- remaining card changes label to `Over`
+- color emphasis increases but should remain calm rather than alarming
+
+A fourth optional compact metric may appear:
+
+- `Categories over budget`
+
+#### 7.10.5 Main Budget List
+
+Each budget row represents one category for the selected month and includes:
+
+- category icon and name
+- budget amount
+- spent amount
+- remaining amount or overage
+- horizontal progress bar
+- status label: `On track`, `Close`, `Over`, or `No activity`
+
+Status thresholds:
+
+- `On track`: 0% to 79% of budget used
+- `Close`: 80% to 99%
+- `Over`: 100% or more
+- `No activity`: 0 spent against a positive budget
+
+Rows sort by this default order:
+
+1. over-budget categories
+2. close-to-limit categories
+3. on-track categories by highest utilization
+4. no-activity categories
+
+Alternative sorts available:
+
+- category name
+- highest budget amount
+- highest spend amount
+- custom manual order
+
+#### 7.10.6 Empty States
+
+Primary empty states:
+
+1. Premium user with no budgets for selected month  
+   Show message: `No budgets set for March 2026 yet` with actions `Create Budget` and `Copy Last Month`.
+
+2. First-time premium user  
+   Show educational state explaining that budgets are optional spending targets, not envelopes that must sum to income.
+
+3. Free user locked preview  
+   Show example benefits and upgrade CTA with concrete use cases such as groceries, dining, transportation, and subscriptions.
+
+#### 7.10.7 Copy Last Month Flow
+
+If the previous month contains at least 1 budget, the screen should expose `Copy Last Month`.
+
+Behavior:
+
+- copies budget amounts and category links only
+- does not copy spend progress
+- does not duplicate archived categories
+- warns if categories from the prior month are now archived or deleted
+
+If 3 budgets from last month can be copied and 1 cannot, the confirmation should state that exact count.
+
+#### 7.10.8 Budget Insight Hints
+
+The overview may surface lightweight hints such as:
+
+- `Dining is 92% used with 8 days left`
+- `Groceries is pacing lower than last month`
+- `Subscriptions has no spend yet`
+
+Hints must remain deterministic and on-device. They should be short, factual, and never shame-inducing.
+
+### 7.11 Screen 15: Create / Edit Budget
+
+#### 7.11.1 Purpose
+
+This screen lets premium users define a monthly budget for a category and adjust it over time.
+
+The workflow should be completable in 10 to 15 seconds for a common case.
+
+#### 7.11.2 Form Fields
+
+Required fields:
+
+- category
+- month
+- budget amount
+
+Optional fields:
+
+- notes for future extensibility if supported later, hidden in v1 by default
+- repeat to future months toggle
+
+Validation rules:
+
+- category must be expense-type
+- only 1 active budget per category per month
+- amount must be greater than 0 and less than or equal to 9,999,999.99
+- month must be within supported visible planning window
+
+#### 7.11.3 Smart Defaults and Fast Paths
+
+If opened from a category row:
+
+- category preselected
+- month defaults to current month
+
+If opened from `Copy Last Month` recovery flow:
+
+- amount prefilled from prior month
+- repeat toggle off by default
+
+If opened while viewing a future month:
+
+- month remains the viewed month
+
+Fast amount entry helpers:
+
+- numeric keypad
+- quick chips for common rounded values if design allows, for example `50`, `100`, `250`, `500`
+
+#### 7.11.4 Edit Mode Enhancements
+
+When editing an existing budget, the screen also shows:
+
+- spent so far this month
+- remaining or over amount
+- small link to view related transactions in the future transaction list flow
+
+If the user reduces a budget below current spent amount:
+
+- allow save
+- show a clear note that the category will display as over budget immediately
+
+The app must not block realistic mid-month budget changes.
+
+#### 7.11.5 Repeat to Future Months
+
+Premium users may optionally apply the same amount forward.
+
+Supported repeat options:
+
+- this month only
+- next 3 months
+- next 6 months
+- until changed
+
+If `until changed` is implemented in v1, it should create explicit month records lazily or through a template rule, but the UI must still show concrete month-specific budgets. The user should never feel trapped in an invisible automation rule.
+
+#### 7.11.6 Delete Budget Behavior
+
+Deleting a budget:
+
+- removes the budget target from the selected month only unless a repeated rule is being edited
+- does not delete the category
+- does not affect transactions
+- updates overview totals immediately
+
+If a repeated series exists, the delete prompt must distinguish:
+
+- `Delete this month only`
+- `Delete this and future months`
+
+### 7.12 Shared Supporting Surfaces
+
+#### 7.12.1 Category Quick Actions Menu
+
+Available actions depending on state:
+
+- edit
+- add budget
+- archive
+- restore
+- merge
+
+#### 7.12.2 Paywall Intercepts
+
+Paywall intercepts can occur from:
+
+- tapping `New Category`
+- attempting to edit category personalization fields
+- opening `Budgets`
+- tapping `Add Budget`
+
+Each intercept should preserve the user's context. After successful purchase or restore, the user returns to the exact draft or screen state they left.
+
+#### 7.12.3 Archive and Merge Confirmations
+
+High-impact actions require explicit confirmation with concrete counts:
+
+- number of linked transactions
+- whether a budget is attached
+- whether recurring templates reference the category
+
+Example confirmation logic:
+
+- `Archive Groceries? 184 transactions and 1 active budget will be preserved.`
+
+### 7.13 Navigation and Return Behavior
+
+Navigation rules:
+
+- categories overview returns to the previous top-level destination or root navigation state
+- create/edit category returns to categories overview by default
+- if category create was launched from transaction entry, save returns to the transaction composer with the new category selected
+- budgets overview preserves selected month when navigating into budget edit and back
+- after saving a budget, the user returns to the same month view and the updated row scroll position is retained
+
+Back behavior must never drop unsaved edits silently.
+
+### 7.14 Interaction Design Standards
+
+This screen family must feel operationally lighter than traditional finance software.
+
+Interaction standards:
+
+- every primary action reachable with one thumb on common phone sizes
+- progress bars use strong contrast without relying on color alone
+- locked premium actions use clear iconography and one-line justification
+- destructive actions separated visually from common actions
+- drag reordering, if supported, should include haptic feedback and visible placement preview
+
+Animation guidance:
+
+- summary values animate subtly on month change under 250 milliseconds
+- row insertions after category or budget creation animate into place
+- progress changes should avoid flashy counting effects
+
+### 7.15 Accessibility Requirements for Categories and Budgets
+
+The screen family must be fully usable with screen readers, large text, reduced motion, and high-contrast settings.
+
+Requirements:
+
+- every category row announces name, current month amount, and budget state if present
+- every budget row announces spent amount, budget amount, and status in words, not percentages alone
+- progress bars expose accessible labels such as `Groceries, 72 percent of 400 dollars used`
+- color chips and icons in the category editor must have text labels
+- drag-and-drop reorder must have an accessible alternative through move up and move down actions
+- locked premium controls must announce that they require Premium before activation
+
+Large text behavior:
+
+- rows may grow vertically
+- amounts may wrap to second line
+- summary cards may stack from 3 columns to 1 column on narrow layouts
+
+### 7.16 Privacy and Security Requirements Within the Flow
+
+Categories and budgets are local financial metadata and must be treated as sensitive.
+
+Requirements:
+
+- all reads and writes occur against local encrypted-at-rest app storage strategy where implemented
+- no category names, budget amounts, or spend totals are sent to third parties for analytics profiling
+- RevenueCat events must not include sensitive category names or budget values
+- screenshots are not blocked by default, but no hidden remote sync or background upload occurs
+
+If optional diagnostics exist, they may include only coarse technical events such as:
+
+- screen opened
+- save success or failure
+- paywall shown
+
+They must not include:
+
+- category names
+- budget amounts
+- transaction-linked merchant titles
+
+### 7.17 Performance Requirements for Categories and Budgets
+
+Performance targets on a mid-range device with 10,000 transactions, 120 categories, and 60 budgets in the selected month:
+
+- categories overview initial render under 180 milliseconds after navigation
+- budget overview initial render under 220 milliseconds after navigation
+- category search result update under 50 milliseconds after keystroke
+- save category under 120 milliseconds
+- save budget under 120 milliseconds
+- month switch under 150 milliseconds
+- archive or restore category under 150 milliseconds including dependent aggregate refresh
+
+The user must never perceive:
+
+- flicker between stale and refreshed totals
+- blocked scrolling while aggregates recalculate
+- keyboard lag in budget amount entry
+
+### 7.18 Data Dependencies
+
+This screen family depends on these local domains:
+
+- categories table
+- category ordering metadata
+- transactions table
+- monthly aggregate caches
+- budgets table
+- recurring transaction templates where category linkage matters
+- settings for primary currency and display preferences
+- premium entitlement cache
+
+Derived data used by the UI includes:
+
+- current month spend per category
+- uncategorized transaction count
+- budget utilization percentages
+- over-budget counts
+- category usage frequency
+- last-used timestamps for smart ordering
+
+All dependencies must be available offline.
+
+### 7.19 Success Criteria for Categories and Budgets
+
+This screen family is successful if users can do the following with little or no training:
+
+- understand their category structure immediately
+- create a needed custom category in under 20 seconds
+- identify categories with missing or inconsistent organization
+- set a monthly budget in under 15 seconds
+- tell which categories are over budget in under 5 seconds
+- adjust plans mid-month without fear of breaking reports
+
+Behavioral indicators of success:
+
+- high completion rate from `New Category` open to save
+- high completion rate from `New Budget` open to save
+- low abandonment after paywall return
+- low frequency of accidental archive or merge reversals
+- sustained monthly revisit rate to budgets among premium users
+
+### 7.20 Final Definition
+
+The categories and budgets experience is the product's structure-and-planning layer: a local-first, low-ceremony screen family that helps users shape their own spending taxonomy, upgrade from generic tracking to intentional planning when they want to, and monitor category-level limits without being forced into a rigid budgeting doctrine.
