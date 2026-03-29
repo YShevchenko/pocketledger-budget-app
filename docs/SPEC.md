@@ -4692,3 +4692,1053 @@ The onboarding flow for this product is a short, privacy-forward, local-first se
 
 Its job is not to impress with feature volume.
 Its job is to remove skepticism, reduce blank-state friction, and create immediate confidence that this is a finance app the user can actually live with.
+
+### 5.26 Screen 9: Dashboard / Home
+
+#### 5.26.1 Screen Purpose
+
+The Dashboard / Home screen is the app's operational center.
+
+It is the first screen users should think of when they ask:
+
+- where do I stand this month?
+- what did I spend recently?
+- am I on track or slipping?
+- what should I do next?
+
+The screen must answer those questions in under 5 seconds without requiring the user to dig through reports, filters, or settings.
+
+Dashboard is not intended to be a dense analytics cockpit.
+It is intended to be a calm decision surface that combines:
+
+- immediate month status
+- quick access to add a transaction
+- recent activity visibility
+- budget awareness
+- lightweight insight
+- clear next actions
+
+#### 5.26.2 Primary User Jobs
+
+The Dashboard / Home screen exists to support six primary jobs:
+
+1. See current month spending and income totals immediately after launch.
+2. Add a new transaction in 1 tap from the most visible surface in the app.
+3. Review the latest recorded transactions to catch missed or incorrect entries.
+4. Understand category-level budget progress at a glance if budgets are enabled.
+5. See whether the month is trending above or below expectation.
+6. Recover easily from blank, sparse, or incomplete data without confusion.
+
+#### 5.26.3 Position in Navigation
+
+Dashboard is the default landing tab after onboarding.
+
+It is also the default return destination when:
+
+- the app cold-starts after onboarding is complete
+- the user backgrounds and resumes the app
+- the user closes a modal add transaction flow
+- the user completes an edit from a transaction detail screen and taps back to root
+
+Recommended bottom tab position:
+
+- left-most or center-most tab slot
+
+Recommended tab label:
+
+- `Home`
+
+Internal product naming may still refer to it as `Dashboard`, but user-facing navigation should prefer `Home` because it is more legible and less corporate.
+
+#### 5.26.4 Core Design Intent
+
+The Home screen should feel:
+
+- immediate
+- stable
+- readable
+- non-judgmental
+- information-rich without feeling busy
+
+The screen should not feel like:
+
+- an accounting report
+- a gamified habit tracker
+- a finance influencer dashboard
+- a warning center dominated by red alerts
+
+The visual and interaction goal is:
+
+**high signal, low friction, low shame**
+
+#### 5.26.5 Supported User States
+
+The Dashboard / Home screen must support all of the following states cleanly:
+
+- first-run empty state after onboarding without transactions
+- first-run partially populated state after one onboarding transaction
+- normal active month with multiple transactions
+- budget-enabled month with some categories near or over limit
+- premium-disabled state where premium cards are visible but clearly locked or omitted
+- sparse-data month where only income or only expenses exist
+- offline state with no network dependency
+- historical month view after the user changes the active month
+- month rollover state on the first day of a new month
+
+#### 5.26.6 Information Hierarchy
+
+The order of information on the screen should reflect how often each area is needed and how quickly it must be understood.
+
+Recommended top-to-bottom hierarchy:
+
+1. Header and month selector
+2. Primary summary card
+3. Quick actions
+4. Budget progress section
+5. Recent transactions
+6. Secondary insights
+7. Premium upsell entry points where relevant and non-intrusive
+
+If screen height is constrained, recent transactions should remain above secondary insights.
+
+#### 5.26.7 Header Area
+
+##### 5.26.7.1 Header Objectives
+
+The header must orient the user without wasting vertical space.
+
+It should communicate:
+
+- where the user is
+- which month is being viewed
+- whether the numbers reflect the current month or a historical month
+
+##### 5.26.7.2 Header Content
+
+Recommended header elements:
+
+- screen title: `Home`
+- month label
+- month switcher controls
+- optional settings or profile icon
+
+Recommended month label formats:
+
+- `March 2026`
+- `Apr 2026`
+
+Do not use ambiguous short numeric formats like `03/26` in the primary header.
+
+##### 5.26.7.3 Header Behavior
+
+Tapping the month label should open a lightweight month picker.
+
+Month switcher controls:
+
+- previous month button
+- next month button
+
+If the current month is selected:
+
+- next month button disabled unless future planning mode exists in a later release
+
+Month switching target:
+
+- perceived response under 150 milliseconds for cached local data
+
+##### 5.26.7.4 Historical Month Treatment
+
+If the selected month is not the current calendar month, show a subtle contextual indicator:
+
+- `Viewing March 2026`
+
+If the user returns to current month:
+
+- indicator removed
+
+Avoid large warning banners for historical viewing.
+
+#### 5.26.8 Primary Summary Card
+
+##### 5.26.8.1 Purpose
+
+The primary summary card is the most important surface on Home.
+
+It provides a compact monthly answer to:
+
+- how much came in
+- how much went out
+- what remains or netted out
+
+It should be interpretable in under 2 seconds.
+
+##### 5.26.8.2 Required Metrics
+
+For the selected month, calculate and display:
+
+- total income
+- total expenses
+- net amount
+
+Definitions:
+
+- total income = sum of all transaction amounts marked as income for month
+- total expenses = sum of all transaction amounts marked as expense for month
+- net amount = total income minus total expenses
+
+##### 5.26.8.3 Copy and Labels
+
+Recommended labels:
+
+- `Income`
+- `Spent`
+- `Net`
+
+Use `Spent` instead of `Expenses` in compact card UI if space is tight.
+
+##### 5.26.8.4 Numeric Formatting
+
+All values must use:
+
+- selected base currency symbol or ISO currency code
+- locale-appropriate thousands separators
+- two decimal places when cent precision exists
+
+Examples:
+
+- `$2,450.00`
+- `EUR 840.50`
+
+If amount is a whole number and the design system allows compact format, secondary contexts may show:
+
+- `$2,450`
+
+Primary summary card should still preserve financial precision where practical.
+
+##### 5.26.8.5 Visual Structure
+
+Recommended structure:
+
+- dominant top-line figure for `Spent` or `Net`
+- two secondary columns or rows for the remaining metrics
+- optional trend delta vs previous month
+
+Preferred default emphasis:
+
+- highlight `Spent` for general tracking users
+
+Alternative acceptable emphasis:
+
+- highlight `Net` if user has budget mode and income tracked consistently
+
+Do not show all three values with equal visual weight if it creates scanning friction.
+
+##### 5.26.8.6 Trend Delta
+
+If prior-month data exists, show one comparison line:
+
+- `12% lower than last month`
+- `8% higher than February`
+
+Delta should default to expense comparison, not income comparison, because spending control is the main dashboard use case.
+
+If no prior-month comparable data exists:
+
+- omit delta line entirely
+
+Do not show fake comparisons such as `0% change`.
+
+##### 5.26.8.7 Budget Context Within Summary
+
+If budgets are enabled and premium is active, the summary card may include a concise budget health line:
+
+- `4 of 9 budgets on track`
+- `2 categories over budget`
+
+This line must not replace numeric totals.
+
+##### 5.26.8.8 Empty Summary State
+
+If there are zero transactions in the selected month:
+
+- income = 0
+- spent = 0
+- net = 0
+
+Show helper copy:
+
+- `No transactions recorded for this month yet`
+
+Primary action remains available:
+
+- `Add Transaction`
+
+#### 5.26.9 Quick Actions Row
+
+##### 5.26.9.1 Required Actions
+
+Directly below the summary card, provide fast access to the most common next steps.
+
+Minimum required actions:
+
+- `Add Transaction`
+- `Search`
+
+Recommended additional actions:
+
+- `View Reports`
+- `Budgets`
+
+##### 5.26.9.2 Priority Rules
+
+`Add Transaction` must be the most prominent action on the entire screen outside of onboarding.
+
+It may appear as:
+
+- floating action button
+- prominent pill button
+- segmented action row with primary styling
+
+The product may use both:
+
+- persistent floating add button
+- top quick action shortcut
+
+if the implementation remains visually disciplined.
+
+##### 5.26.9.3 Free vs Premium Quick Actions
+
+If a quick action leads to a premium feature:
+
+- show lock icon
+- allow tap to open paywall explanation
+- do not disable the button without explanation
+
+Examples:
+
+- `Budgets` locked for free users
+- `View Reports` partially available if only advanced charts are premium
+
+##### 5.26.9.4 Add Transaction Entry Points
+
+From Home, the add transaction flow should be reachable by:
+
+- primary quick action button
+- floating action button if implemented
+- empty state CTA
+- optional pull-up action sheet from long press on Home tab
+
+At least one visible `Add Transaction` control must remain above the fold on most devices.
+
+#### 5.26.10 Budget Snapshot Section
+
+##### 5.26.10.1 Purpose
+
+The budget snapshot gives users directional control without forcing them into a full reports workflow.
+
+It should answer:
+
+- which categories are close to their limit
+- which categories are already over
+- how much budget remains
+
+##### 5.26.10.2 Visibility Rules
+
+If user is Premium and has at least one active budget for the selected month:
+
+- show budget snapshot section
+
+If user is Premium but has no budgets:
+
+- show setup prompt card
+
+If user is Free:
+
+- show either a concise upgrade teaser or omit the section based on monetization strategy selected for v1
+
+Recommended v1 behavior:
+
+- show a compact teaser card, not a full empty budget component
+
+##### 5.26.10.3 Budget Snapshot Content
+
+Show up to 3 high-priority category budget rows on Home.
+
+Priority order:
+
+1. over-budget categories
+2. categories above 80% utilization
+3. categories with highest absolute spend
+
+Each budget row should include:
+
+- category name
+- spent amount
+- budget amount
+- remaining amount or overage amount
+- progress bar
+
+Examples:
+
+- `Groceries  $410 / $500  $90 left`
+- `Dining  $265 / $200  $65 over`
+
+##### 5.26.10.4 Color and Status Rules
+
+Budget progress states:
+
+- under 80%: normal accent
+- 80% to 99%: caution color
+- 100% and above: error color
+
+Color alone must not communicate status.
+Pair color with text:
+
+- `On track`
+- `Almost there`
+- `Over budget`
+
+##### 5.26.10.5 Budget Summary Line
+
+At top of section, show one concise aggregate line:
+
+- `5 budgets tracked this month`
+- `2 need attention`
+
+If all budgets are under 80%:
+
+- `All budgets currently on track`
+
+##### 5.26.10.6 Budget Empty State for Premium Users
+
+If premium is active but user has created no budgets:
+
+Headline:
+
+**Set your first budget**
+
+Support copy:
+
+Track a category limit like groceries, dining, or transportation to see progress here.
+
+Primary CTA:
+
+- `Create Budget`
+
+##### 5.26.10.7 Budget Teaser for Free Users
+
+If user is on free tier:
+
+Headline:
+
+**Track category budgets with Premium**
+
+Support copy:
+
+See how close you are to your monthly limits without switching to spreadsheets.
+
+CTA:
+
+- `See Premium`
+
+This card must be visually subordinate to actual finance data.
+
+#### 5.26.11 Recent Transactions Section
+
+##### 5.26.11.1 Purpose
+
+Recent transactions provide confidence, reviewability, and error recovery.
+
+Users need to verify:
+
+- the last item was saved
+- entries look correct
+- the category assignment makes sense
+- nothing obvious is missing
+
+##### 5.26.11.2 Section Structure
+
+Recommended section header:
+
+- `Recent Transactions`
+
+Secondary action:
+
+- `See All`
+
+The section should show the most recent 5 to 10 transactions for the selected month by default.
+
+Recommended default:
+
+- 7 rows
+
+##### 5.26.11.3 Row Content
+
+Each row must include:
+
+- merchant or title
+- category chip or label
+- transaction date
+- amount
+- income or expense visual distinction
+
+Optional row metadata:
+
+- recurring badge
+- note indicator
+- currency conversion indicator
+
+##### 5.26.11.4 Sorting Rules
+
+Default sort:
+
+- descending by transaction date
+- tie-breaker descending by created_at timestamp
+
+If the selected month is historical:
+
+- still sort by transaction date descending
+
+##### 5.26.11.5 Row Interaction
+
+Tapping a row opens transaction detail or edit view.
+
+Swipe gestures may support:
+
+- edit
+- delete
+
+but destructive swipe actions should require confirmation or undo support.
+
+Preferred delete pattern:
+
+- swipe to reveal delete
+- tap delete
+- show 5-second undo toast
+
+##### 5.26.11.6 Row Amount Styling
+
+Expenses:
+
+- prefixed with minus or shown in expense color
+
+Income:
+
+- prefixed with plus or shown in income color
+
+Example:
+
+- `-$24.50`
+- `+$2,100.00`
+
+The app may use either sign convention or semantic color plus label, but the distinction must remain immediately obvious in monochrome accessibility contexts as well.
+
+##### 5.26.11.7 No Transactions State
+
+If there are no transactions in selected month:
+
+show an empty recent transactions card with:
+
+- illustrative icon or neutral placeholder
+- headline
+- support copy
+- primary CTA
+
+Recommended copy:
+
+Headline:
+
+**No transactions yet**
+
+Support copy:
+
+Your recent activity will appear here after you log income, bills, or purchases.
+
+Primary CTA:
+
+- `Add Transaction`
+
+Secondary CTA:
+
+- `Learn Categories`
+
+##### 5.26.11.8 Sparse Month State
+
+If the month contains 1 to 3 transactions:
+
+- show all available transactions
+- do not pad with skeleton placeholders
+- keep section visible because reinforcement matters early
+
+#### 5.26.12 Secondary Insights Block
+
+##### 5.26.12.1 Purpose
+
+The Home screen should provide one lightweight insight block that encourages return usage without overwhelming the user.
+
+Acceptable insight types:
+
+- top spending category this month
+- spending vs last month
+- number of transactions logged this month
+- recurring transaction due soon
+
+Only one primary insight card should appear above the fold on smaller devices.
+
+##### 5.26.12.2 Recommended Default Insight Priority
+
+Priority order:
+
+1. budget alert if budget feature active and at-risk
+2. top spending category
+3. spending change vs previous month
+4. upcoming recurring transaction reminder
+
+Examples:
+
+- `Dining is your top category this month at $265`
+- `You've spent $140 less than this time last month`
+- `Rent is due in 2 days`
+
+##### 5.26.12.3 Insight Guardrails
+
+Insights must be:
+
+- factual
+- concise
+- non-judgmental
+
+Avoid copy such as:
+
+- `You're overspending again`
+- `Bad month so far`
+- `You're falling behind`
+
+Preferred alternatives:
+
+- `Spending is currently 18% above last month`
+- `Dining exceeded its budget by $65`
+
+#### 5.26.13 Multi-Currency Home Behavior
+
+##### 5.26.13.1 Premium Scope
+
+Multi-currency is a Premium feature.
+
+The Home screen must still remain coherent when the user has transactions in more than one currency.
+
+##### 5.26.13.2 Default Display Rules
+
+Primary summary card should display totals in the user's base currency for the selected month.
+
+If any transaction in the selected month uses a non-base currency:
+
+- show subtle multi-currency indicator
+
+Example:
+
+- `Includes converted transactions`
+
+##### 5.26.13.3 Transaction List Treatment
+
+Recent transaction rows should show:
+
+- original transaction currency amount if different from base currency
+- optional smaller converted amount beneath or beside it
+
+Example:
+
+- `€18.00`
+- `$19.43 base`
+
+If the user is Free and legacy data somehow contains multi-currency records from a prior premium entitlement:
+
+- existing records remain readable
+- editing or adding additional foreign-currency transactions should route through entitlement rules defined elsewhere
+
+#### 5.26.14 Search and Filter Entry From Home
+
+##### 5.26.14.1 Search Purpose
+
+Home is not the full search experience, but it must provide a fast path into it.
+
+##### 5.26.14.2 Entry Points
+
+Search can be entered from:
+
+- quick action row
+- magnifying glass icon in header
+- `See All` within recent transactions if that route opens the ledger with search affordance
+
+##### 5.26.14.3 Home-Level Filters
+
+Dashboard itself should remain intentionally light on filters.
+
+Allowed Home-level controls:
+
+- month switcher
+- optional account scope in later versions if account entities exist
+
+Do not overload Home with:
+
+- category filters
+- merchant filters
+- amount range controls
+- advanced report dimensions
+
+Those belong in ledger or reports screens.
+
+#### 5.26.15 Widgets and Home Relationship
+
+If widgets are supported for Premium users, Home should remain the richer canonical detail surface.
+
+Widget interaction rules:
+
+- tapping widget opens Home by default
+- deep link may optionally scroll to relevant section such as budget snapshot or recent transactions
+
+Home may include a small widget setup teaser only if:
+
+- user is premium
+- widgets supported on device
+- widget not yet configured
+
+This teaser should appear below core finance data.
+
+#### 5.26.16 Paywall Behavior on Home
+
+##### 5.26.16.1 Allowed Monetization Entry Points
+
+Dashboard may surface Premium from:
+
+- locked budget teaser
+- charts or advanced trends shortcut
+- widget setup card
+- export shortcut if present in action sheet
+
+##### 5.26.16.2 Disallowed Monetization Behaviors
+
+Do not:
+
+- block Home behind paywall
+- cover monthly summary with subscription modal on launch
+- interrupt recent transaction review with forced upsell
+- trigger paywall automatically after every save from Home
+
+##### 5.26.16.3 Upgrade Copy Standard
+
+Upgrade copy on Home should be utility-led:
+
+- `Unlock budgets, recurring transactions, charts, widgets, and CSV export`
+
+Do not use vague marketing lines with no concrete feature reference.
+
+#### 5.26.17 Refresh and Data Update Behavior
+
+##### 5.26.17.1 Core Principle
+
+Because the app is offline-first and local-data-backed, Home should feel instant and predictable.
+
+It should not rely on network refresh semantics for normal finance data.
+
+##### 5.26.17.2 When Data Recomputes
+
+Dashboard data should recompute when:
+
+- app launches
+- selected month changes
+- transaction is created
+- transaction is edited
+- transaction is deleted
+- category assignment changes and affects grouping
+- budget value changes
+- recurring transaction materializes into a real transaction
+- premium entitlement changes affecting visible modules
+
+##### 5.26.17.3 Pull to Refresh
+
+Pull to refresh is optional.
+
+If implemented, it should refresh:
+
+- local derived aggregates
+- premium entitlement status if stale
+- widget configuration hints if relevant
+
+It must not suggest that the user's finance data lives remotely.
+
+Preferred refresh copy:
+
+- `Refreshing local summary`
+
+Avoid copy like:
+
+- `Syncing your finances`
+
+unless future cloud sync actually exists.
+
+#### 5.26.18 Loading States
+
+##### 5.26.18.1 Initial Load
+
+For a cold app open with local database initialization:
+
+- show shell immediately
+- render skeletons for summary and recent transactions if needed
+- target visible content under 400 milliseconds on modern devices
+
+##### 5.26.18.2 Skeleton Guidance
+
+Skeletons may appear for:
+
+- summary card
+- budget rows
+- recent transaction rows
+
+Maximum skeleton row count:
+
+- 5
+
+Do not show loading spinners in the center of an otherwise blank screen for normal local load.
+
+##### 5.26.18.3 Incremental Updates
+
+After adding a transaction from Home:
+
+- update summary and recent transactions optimistically or immediately after commit
+- highlight or animate the new row subtly
+
+Animation duration:
+
+- 150 to 300 milliseconds
+
+#### 5.26.19 Empty, Partial, and Error States
+
+##### 5.26.19.1 Full Empty State
+
+Condition:
+
+- no transactions exist at all in local database
+
+Expected Home composition:
+
+- visible summary card with zero values
+- recent transactions empty card
+- optional category education card
+- highly prominent `Add Transaction` CTA
+
+Recommended support copy:
+
+- `Start by logging one purchase, bill, or paycheck. Everything stays on this device.`
+
+##### 5.26.19.2 Current Month Empty, Historical Data Exists
+
+Condition:
+
+- user has prior-month transactions but none in selected current month
+
+Support copy should acknowledge continuity:
+
+- `Nothing recorded for March yet. Your earlier history is still available.`
+
+Optional secondary action:
+
+- `View February`
+
+##### 5.26.19.3 Budget Data Missing or Invalid
+
+If a budget row cannot render due to corruption or missing references:
+
+- omit broken row
+- log recoverable error locally
+- show remaining valid rows
+
+If entire budget snapshot fails:
+
+- replace section with neutral fallback card:
+
+`Budgets couldn't be loaded right now`
+
+CTA:
+
+- `Try Again`
+
+The rest of Home must remain usable.
+
+##### 5.26.19.4 Database Recovery Edge State
+
+If Home cannot read core summary data because the local database is temporarily unavailable:
+
+- show dedicated non-destructive error surface
+- explain that data is stored locally
+- provide retry action
+- provide export or recovery route only if technically available
+
+Recommended copy:
+
+- `Your local data couldn't be loaded right now`
+- `Try Again`
+
+Avoid catastrophic wording like `Data lost` unless loss is actually confirmed.
+
+#### 5.26.20 Interaction Details
+
+##### 5.26.20.1 Scroll Behavior
+
+Home should be a single vertical scroll surface.
+
+Sticky behavior allowed:
+
+- sticky compact month header on scroll
+
+Do not create nested scroll regions for:
+
+- budget rows
+- recent transactions preview
+
+unless absolutely required for performance at unusual list sizes.
+
+##### 5.26.20.2 Tap Targets
+
+Minimum interactive target size:
+
+- 44 x 44 pt equivalent
+
+Particularly important for:
+
+- month switch arrows
+- add transaction button
+- recent transaction rows
+- `See All` links
+
+##### 5.26.20.3 Haptics
+
+Optional light haptic feedback may be used for:
+
+- successful transaction creation returning to Home
+- month switch
+- swipe action commit
+
+Do not use strong error haptics for overspending or budget alerts.
+
+##### 5.26.20.4 Motion
+
+Home motion should be sparse and informative.
+
+Allowed:
+
+- card fade-in on first load
+- row insertion highlight
+- count/value morph on summary update
+
+Avoid:
+
+- bouncing KPI animations
+- celebratory confetti
+- aggressive pulsing upgrade buttons
+
+#### 5.26.21 Accessibility Requirements for Home
+
+Home must be fully usable with:
+
+- dynamic type
+- screen readers
+- reduced motion enabled
+- high contrast preferences
+
+Specific requirements:
+
+- summary card metrics announced with labels and values in logical order
+- budget progress bars expose text equivalents
+- recent transaction rows read merchant, category, date, and amount clearly
+- locked premium items announce that they require Premium before activation
+- color-coded status always paired with text
+
+Example screen reader phrasing for a budget row:
+
+- `Groceries, spent 410 dollars out of 500 dollars, 90 dollars remaining, almost at limit`
+
+#### 5.26.22 Home Screen Data Dependencies
+
+The Home screen depends on the following local data domains:
+
+- transactions
+- categories
+- budgets
+- recurring transaction instances that have posted or are due
+- app settings
+- premium entitlement cache
+- currency preferences and exchange metadata if multi-currency active
+
+Derived values required:
+
+- month income total
+- month expense total
+- month net total
+- top categories by spend
+- recent transactions list
+- budget utilization ratios
+- previous month comparison values
+- transaction count for month
+
+All of these should be computable fully offline from local persisted data.
+
+#### 5.26.23 Performance Expectations for Home
+
+Target performance on a mid-range device with 10,000 local transactions:
+
+- initial Home render shell under 250 milliseconds after route mount
+- summary aggregate query under 80 milliseconds
+- recent transactions query under 60 milliseconds
+- month switch recompute under 120 milliseconds
+- return from add transaction to visually updated Home under 150 milliseconds after DB commit
+
+Scrolling target:
+
+- 55 to 60 FPS equivalent for normal interactions
+
+Home must remain usable with:
+
+- 120 categories
+- 60 active budgets
+- 5 years of local transaction history
+
+without requiring network offload.
+
+#### 5.26.24 Privacy Messaging on Home
+
+Home should not constantly repeat privacy marketing copy, but it may reinforce trust in specific sparse states.
+
+Allowed privacy reassurance contexts:
+
+- first-ever empty state
+- database recovery messaging
+- export or premium explanation cards
+
+Example:
+
+- `Stored only on this device`
+
+Do not place privacy slogans permanently in the main KPI area once the user is active.
+
+#### 5.26.25 Success Criteria for the Home Screen
+
+The Dashboard / Home screen is successful if users can do all of the following with little or no instruction:
+
+- identify current month spending within 3 seconds
+- add a transaction within 1 tap from Home
+- confirm their most recent transaction saved correctly
+- understand whether any budget needs attention
+- move to a prior month without confusion
+- distinguish free features from premium upgrades without feeling blocked
+
+Behavioral indicators of success:
+
+- high repeat use of Home as default entry point
+- low abandonment after add transaction
+- frequent transition from Home to transaction detail, search, and reports
+- low support confusion around whether data is stored locally
+
+#### 5.26.26 Final Definition
+
+The Dashboard / Home screen is the app's calm operational hub: a local-first monthly overview that surfaces current spending, recent activity, and immediate next actions with enough intelligence to guide decisions, but without the clutter, judgment, or dependence on bank sync that define many competing finance apps.
