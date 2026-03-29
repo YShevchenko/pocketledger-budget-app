@@ -5742,3 +5742,1127 @@ Behavioral indicators of success:
 #### 5.26.26 Final Definition
 
 The Dashboard / Home screen is the app's calm operational hub: a local-first monthly overview that surfaces current spending, recent activity, and immediate next actions with enough intelligence to guide decisions, but without the clutter, judgment, or dependence on bank sync that define many competing finance apps.
+
+## 6. Screen-by-Screen Descriptions: Transaction Entry and Editing
+
+### 6.1 Purpose of the Transaction Entry and Editing Experience
+
+The transaction entry and editing experience is the operational core of the product.
+
+If Home is the answer screen, transaction entry is the behavior screen.
+The app succeeds or fails primarily on whether users can record money activity quickly enough, accurately enough, and often enough to maintain the habit over time.
+
+The create and edit flows must therefore optimize for:
+
+- speed for common daily entries
+- accuracy for amounts, categories, and dates
+- low cognitive load
+- strong local feedback
+- easy correction after mistakes
+- zero network dependency
+
+This experience must make manual logging feel materially easier than:
+
+- updating a spreadsheet
+- remembering purchases for later
+- wrestling with an overcomplicated budgeting flow
+
+The screen family described in this section includes:
+
+- add transaction composer opened from Home or other entry points
+- edit transaction screen for existing records
+- supporting pickers and local helper surfaces used directly within the flow
+
+This section does not define full search, reporting, budgets, or settings behavior beyond how those systems interact with transaction creation and editing.
+
+### 6.2 Product Role and Strategic Importance
+
+The product proposition depends on one repeated user belief:
+
+**"I can log this before I lose patience."**
+
+If that belief fails, the app collapses into:
+
+- incomplete data
+- broken reports
+- unreliable budgets
+- user guilt
+- churn
+
+The transaction flow is therefore the single highest-priority interaction in the app.
+
+Design quality for this flow must exceed the product average.
+
+It should feel:
+
+- immediate
+- calm
+- forgiving
+- context-aware
+- precise
+
+It should not feel:
+
+- form-heavy
+- accounting-oriented
+- punitive
+- visually noisy
+- slow to confirm
+
+### 6.3 Primary User Jobs
+
+The transaction entry and editing system exists to support these primary jobs:
+
+1. Record an expense in under 10 seconds in the common case.
+2. Record income with equal clarity and without expense-biased assumptions.
+3. Correct a category, amount, date, or title quickly after noticing a mistake.
+4. Reuse local history to reduce repetitive typing.
+5. Save entries confidently while fully offline.
+6. Access richer metadata when needed without forcing it for every entry.
+
+### 6.4 Entry Points Into the Flow
+
+Users must be able to start transaction creation from multiple contexts.
+
+Required entry points:
+
+- Home primary `Add Transaction` action
+- floating add button if implemented
+- empty state CTA on Home
+- onboarding first-transaction prompt
+- widget deep link if widget support exists
+
+Optional entry points:
+
+- long press quick action from app icon
+- add action from ledger screen
+- contextual add from category or budget detail in later versions
+
+All entry points should open the same canonical composer with context-sensitive defaults rather than separate divergent forms.
+
+### 6.5 Screen Pattern and Presentation Model
+
+Recommended v1 presentation pattern:
+
+- full-height bottom sheet on larger phones and tablets when platform conventions allow
+- full-screen modal on smaller devices or when keyboard/layout constraints make sheets unstable
+
+The implementation may choose one canonical pattern across devices if consistency is materially better than adaptation.
+
+Regardless of shell pattern, the experience must behave as a focused primary task surface rather than a lightweight popover.
+
+Required characteristics:
+
+- keyboard-safe layout
+- large amount input area above the fold
+- visible save action without excessive scrolling
+- predictable dismissal behavior
+- draft-preserving behavior when reasonable
+
+### 6.6 Screen 10: Add Transaction Composer
+
+#### 6.6.1 Screen Objective
+
+The Add Transaction composer exists to help the user convert a real-world money event into a clean local record with minimum friction.
+
+The composer must support both:
+
+- fast, almost reflexive capture
+- deliberate, corrected, metadata-rich entry
+
+#### 6.6.2 Default Opening State
+
+When opened with no prefilled context, the composer should initialize with:
+
+- transaction type = `Expense`
+- date = current local date
+- currency = base currency
+- category = empty but ready for suggestion
+- title/merchant = empty
+- amount = empty and focused
+- note = collapsed or hidden behind secondary affordance
+
+Reasoning:
+
+- expense is the most common entry type
+- today is the most common date
+- amount is the highest-value first field for rapid capture
+
+#### 6.6.3 Initial Focus Rules
+
+Default focus on open:
+
+- amount field
+
+Exceptions:
+
+- if amount was prefilled from widget or quick-add preset, focus title/merchant
+- if user is returning from an interrupted draft with amount already present, focus first incomplete required field
+
+Keyboard behavior:
+
+- numeric keypad where platform supports it
+- preserve decimal separator appropriate to locale
+- avoid auto-capitalization on amount field
+
+#### 6.6.4 Core Layout Structure
+
+Recommended top-to-bottom layout:
+
+1. modal header
+2. transaction type segmented control
+3. amount input block
+4. merchant/title input
+5. category selector
+6. date row
+7. optional advanced metadata section
+8. primary save action
+
+Required visible-above-fold elements on most devices:
+
+- close or cancel control
+- amount field
+- title field
+- category field
+- save button or sticky save footer
+
+#### 6.6.5 Header Area
+
+Header title:
+
+- `Add Transaction`
+
+Required header controls:
+
+- dismiss or cancel
+- optional save if footer save is not present
+
+If the form contains unsaved user-entered content and the user attempts to dismiss, show a confirmation prompt.
+
+Recommended confirmation copy:
+
+- `Discard this transaction draft?`
+- `Your changes haven't been saved.`
+
+Actions:
+
+- `Keep Editing`
+- `Discard`
+
+Do not show the discard prompt if the form is completely untouched.
+
+#### 6.6.6 Transaction Type Control
+
+The composer must support at minimum:
+
+- `Expense`
+- `Income`
+
+Recommended control type:
+
+- segmented toggle directly beneath header
+
+Behavior:
+
+- switching type updates available category suggestions
+- amount value remains unchanged when switching
+- color accents may update subtly to reinforce type
+
+Do not require the user to encode type by entering negative or positive numbers manually.
+
+Numbers must be stored as positive magnitudes with type as separate semantic state at the product level, even if later data implementation differs internally.
+
+#### 6.6.7 Amount Input Block
+
+The amount input is the dominant input surface.
+
+Requirements:
+
+- large type size
+- strong contrast
+- easy correction
+- locale-aware decimal input
+
+Supported examples:
+
+- `12.50`
+- `12,50` in locales using comma decimals
+- `1200`
+
+Formatting behavior:
+
+- while editing, avoid aggressive reformatting that moves cursor unexpectedly
+- on blur or save preparation, normalize to display currency-formatted preview
+
+Rules:
+
+- maximum precision: 2 decimal places for standard currencies in v1
+- minimum allowed amount: 0.01
+- leading zeros handled gracefully
+- minus sign entry blocked or normalized based on type model
+
+Validation messages:
+
+- `Enter an amount greater than 0`
+- `Use no more than 2 decimal places`
+
+The field must remain responsive under all circumstances and never block on category suggestion logic.
+
+#### 6.6.8 Merchant / Title Field
+
+The title field identifies what the transaction was.
+
+User-facing label:
+
+- `Merchant or Title`
+
+Accepted values include:
+
+- merchant names such as `Trader Joe's`
+- descriptive labels such as `Rent`
+- income descriptors such as `Salary`
+- generic notes such as `Cash withdrawal`
+
+Behavior requirements:
+
+- free text input
+- recent-history-based suggestions after 1 to 2 characters when local matches exist
+- preserve exact user-entered casing unless normalization rules are clearly defined
+
+Common-case expectation:
+
+- 2 to 30 characters
+
+Maximum recommended length:
+
+- 120 characters
+
+Suggested placeholder copy:
+
+- `Where did you spend or receive money?`
+
+The product must not force a merchant vocabulary or rigid payee system in v1.
+
+#### 6.6.9 Smart Local Suggestions in the Title Field
+
+As the user types, the composer may show locally derived suggestions based on prior transaction titles.
+
+Suggestion goals:
+
+- reduce typing
+- improve category prediction confidence
+- reinforce continuity for recurring real-world behavior
+
+Suggestion row contents:
+
+- title
+- most recent matching category
+- optional last used amount
+- optional last used date recency such as `used 8 days ago`
+
+Example suggestion:
+
+- `Trader Joe's  • Groceries  • last $64.32`
+
+Interaction rules:
+
+- tapping suggestion fills title
+- category auto-fills if confidence is high
+- amount may be suggested but must not silently overwrite a manually entered amount
+
+User control requirement:
+
+- suggestions must be easy to ignore
+- no mandatory autocomplete commit on blur
+
+#### 6.6.10 Category Selector
+
+The category field is required for every saved transaction.
+
+User-facing label:
+
+- `Category`
+
+Default behavior:
+
+- empty state with suggestion chip if confidence exists
+- tap opens category picker
+
+Required create-state support:
+
+- selected category label
+- icon or color if category system uses them
+- clear locked indicator for premium-only custom categories when relevant
+
+The category selector must be efficient enough that most users can confirm a suggested category with one tap or choose a different one with two taps.
+
+#### 6.6.11 Smart Categorization
+
+Smart categorization is a core product promise and must operate fully offline from local history and app-provided defaults.
+
+Input signals may include:
+
+- normalized title text
+- transaction type
+- prior user category selections for matching titles
+- recent frequency
+- amount similarity for repeating merchants
+
+Rules:
+
+- suggestions are assistive, not authoritative
+- the user must always see the selected category before saving
+- automatic category prefill is allowed only when confidence crosses a high threshold
+- ambiguous cases should surface a suggestion rather than an automatic lock-in
+
+Example behaviors:
+
+- typing `Starbucks` suggests `Coffee`
+- typing `Whole Foods` suggests `Groceries`
+- typing `Paycheck` suggests `Salary`
+
+If no confidence exists:
+
+- show neutral prompt such as `Choose a category`
+
+Do not fabricate certainty.
+
+#### 6.6.12 Category Picker Behavior
+
+Tapping category opens a dedicated picker surface.
+
+Required picker capabilities:
+
+- searchable list if category count exceeds 12
+- grouped display by income vs expense categories when applicable
+- recent or suggested section at top
+- clear selected-state indicator
+
+Recommended ordering:
+
+1. suggested category
+2. recent categories
+3. full category list alphabetically or by template grouping
+
+Picker interaction target:
+
+- category selection completed in under 2 taps for common cases
+
+If the user is Free and attempts to access a Premium custom category creation affordance:
+
+- allow viewing existing default categories
+- route new custom category creation to paywall messaging
+
+#### 6.6.13 Date Row
+
+Every transaction must have a date.
+
+Default:
+
+- today in local device timezone
+
+Display format:
+
+- locale-friendly long or medium date
+
+Examples:
+
+- `Mar 29, 2026`
+- `29 Mar 2026`
+
+Interaction:
+
+- tapping date opens native or custom date picker
+
+Supported use cases:
+
+- entering something from earlier today
+- backfilling yesterday or prior week
+- correcting date mistakes in review
+
+Guardrails:
+
+- future dates allowed only if product strategy permits planned entries in v1
+- if future dates are not supported for normal transactions, explain clearly and steer user toward recurring or reminders when those features exist
+
+Recommended v1 behavior:
+
+- allow past and current dates
+- disallow future dates for standard posted transactions
+
+#### 6.6.14 Advanced Metadata Section
+
+The composer should keep common entry simple while supporting more detail when needed.
+
+Recommended advanced section label:
+
+- `More Details`
+
+Collapsed by default for new users.
+
+Expanded fields may include:
+
+- note
+- currency selector for Premium users
+- recurring toggle or link for Premium users
+- optional account selector if account entities are introduced later
+
+The advanced section must not be required to save a standard transaction.
+
+#### 6.6.15 Notes Field
+
+Notes are optional.
+
+Use cases:
+
+- clarify ambiguous purchases
+- record reimbursement context
+- distinguish split cash events manually
+- annotate one-off income
+
+Guidelines:
+
+- multiline input
+- character limit: 500
+- no markdown or rich text support in v1
+
+Example placeholders:
+
+- `Optional note`
+- `Add context if you'll want it later`
+
+#### 6.6.16 Multi-Currency Entry Behavior
+
+Multi-currency is a Premium capability.
+
+If Premium is active, the advanced section may expose:
+
+- transaction currency selector
+- exchange-rate preview or stored conversion result
+
+Required create behavior:
+
+- default currency = base currency
+- if user selects non-base currency, amount field represents original currency amount
+- UI must display that conversion will be stored for base-currency reporting
+
+Example support copy:
+
+- `Saved as EUR 18.00, converted for base-currency summaries`
+
+If user is Free:
+
+- currency selector hidden or locked with explanation
+- existing base-currency flow remains uninterrupted
+
+#### 6.6.17 Recurring-Aware Entry Behavior
+
+Recurring transactions are Premium.
+
+For standard add transaction flow, the user is creating a posted transaction, not a recurring template.
+
+However, the composer may detect recurrence cues from local history and offer lightweight assistance.
+
+Allowed assistive behavior:
+
+- `You log this monthly. Create a recurring transaction?`
+
+This prompt must appear only after save or in a secondary area.
+It must not interrupt the primary act of logging a single transaction.
+
+Do not force users into recurring setup when all they wanted was to capture a normal expense.
+
+#### 6.6.18 Save Action Placement
+
+The save action must remain obvious and easy to reach.
+
+Recommended label:
+
+- `Save Transaction`
+
+Alternate compact label:
+
+- `Save`
+
+Preferred implementation:
+
+- sticky bottom action bar containing save button
+
+Save button state:
+
+- disabled until minimum required fields are valid
+- enabled immediately once amount, title, category, and date are valid
+
+Required minimum fields for save:
+
+- valid amount
+- non-empty title
+- valid category
+- valid date
+- valid transaction type
+
+#### 6.6.19 Save Interaction and Feedback
+
+On save:
+
+1. validate locally
+2. persist to local database
+3. update derived summaries
+4. dismiss composer or transition appropriately
+5. show non-intrusive success feedback if helpful
+
+Target success time:
+
+- under 150 milliseconds from tap to committed local save on modern devices
+
+Feedback options:
+
+- subtle toast: `Transaction saved`
+- return to Home with inserted row highlight
+- light success haptic if platform permits
+
+Do not block save on:
+
+- network availability
+- entitlement re-check
+- analytics dispatch
+
+#### 6.6.20 Validation Rules for Create
+
+Create-time validation must be immediate but not hostile.
+
+Required validation rules:
+
+- amount required
+- amount must be numeric
+- amount must be greater than 0
+- title required
+- title must not be whitespace only
+- category required
+- date required
+- future date not allowed if future-entry policy disabled
+
+Recommended inline validation timing:
+
+- on blur
+- on save attempt
+- while typing only for obviously invalid amount structure
+
+Validation copy must be specific.
+
+Preferred examples:
+
+- `Enter a merchant or title`
+- `Choose a category`
+- `Pick a valid date`
+
+Avoid vague copy such as:
+
+- `Invalid input`
+- `Something went wrong`
+
+#### 6.6.21 Error States in Create Flow
+
+Possible failure classes:
+
+- invalid field input
+- local database write failure
+- corrupted category reference
+- premium entitlement mismatch for premium-only fields
+
+Required behavior by class:
+
+Field validation failure:
+
+- keep user on form
+- focus first invalid field
+- display inline message
+
+Database write failure:
+
+- do not dismiss form
+- preserve entered values
+- show retryable message
+
+Recommended copy:
+
+- `Couldn't save this transaction locally`
+- `Try Again`
+
+Category corruption edge case:
+
+- clear invalid category selection
+- ask user to choose another category
+- log recoverable internal error if supported
+
+Premium mismatch:
+
+- preserve non-premium-safe data where possible
+- remove or block premium-only field commit with explanation
+
+#### 6.6.22 Empty, Sparse, and Assisted States
+
+The composer must support users with varying data maturity.
+
+If the user has no transaction history:
+
+- suggestions area omitted or replaced with short explanatory helper
+
+Recommended helper:
+
+- `Categories will get smarter as you log transactions`
+
+If the user has sparse history:
+
+- show only 1 to 3 highly relevant suggestions
+
+If the user has rich history:
+
+- use recent-title and recent-category intelligence more aggressively
+- never let suggestion UI crowd out required fields
+
+### 6.7 Screen 11: Edit Transaction
+
+#### 6.7.1 Screen Objective
+
+The Edit Transaction screen exists to let users correct mistakes safely and quickly after a transaction already exists.
+
+Editing is not a secondary edge case.
+It is a core trust-building behavior.
+
+Users must feel confident that:
+
+- mistakes are easy to fix
+- changing one field does not create hidden side effects
+- updated summaries will reflect the correction immediately
+
+#### 6.7.2 Entry Points
+
+Required edit entry points:
+
+- tap a transaction row from Home recent transactions
+- tap a transaction from future full transaction list surfaces
+- swipe action `Edit` where implemented
+
+The app may use a detail screen before edit in later sections, but v1 may also allow direct entry into edit from a transaction row if that is faster and clearer.
+
+#### 6.7.3 Screen Structure
+
+The edit screen should reuse the create composer layout as much as possible.
+
+Benefits of reuse:
+
+- lowers learning cost
+- reduces implementation drift
+- ensures field parity
+
+Differences from create:
+
+- header title = `Edit Transaction`
+- fields prefilled from existing record
+- save action label = `Save Changes`
+- destructive delete action available
+
+#### 6.7.4 Prefilled Data Requirements
+
+The edit screen must prepopulate:
+
+- transaction type
+- amount
+- title
+- category
+- date
+- note if present
+- currency data if applicable and Premium-capable
+- recurring-origin metadata indicator if relevant
+
+The user must never feel like they are recreating the transaction from scratch just to fix one field.
+
+#### 6.7.5 Editing Behavior Rules
+
+Users must be able to modify any editable field independently.
+
+Expected common edit jobs:
+
+- fix typo in title
+- correct category
+- change amount
+- backdate transaction
+- add note later
+- switch transaction from expense to income if originally misclassified
+
+Required behavior:
+
+- changing one field must not wipe unrelated fields
+- updated smart suggestions may assist but must not auto-overwrite existing values
+- if type changes from expense to income, incompatible category selections should be revalidated
+
+If current selected category is no longer valid for the new type:
+
+- clear category and require reselection
+- explain briefly
+
+Recommended copy:
+
+- `Choose an income category for this transaction`
+
+#### 6.7.6 Save Changes Interaction
+
+Save flow mirrors create flow with two added requirements:
+
+- update existing record atomically
+- refresh all affected derived data immediately
+
+Affected derived data may include:
+
+- month totals
+- recent transaction ordering
+- category totals
+- budget usage
+- charts and trends
+- widget summaries
+
+Target perceived save time:
+
+- under 150 milliseconds after DB commit
+
+Success feedback:
+
+- `Changes saved`
+
+#### 6.7.7 Dirty State Detection
+
+The edit screen must detect whether changes have actually been made.
+
+If no fields changed:
+
+- save button may remain disabled
+- dismiss should not prompt for discard
+
+If fields changed and user attempts to navigate away:
+
+- show unsaved changes confirmation
+
+Recommended copy:
+
+- `Discard your edits?`
+- `Your changes haven't been saved.`
+
+Actions:
+
+- `Keep Editing`
+- `Discard Changes`
+
+#### 6.7.8 Delete Action
+
+Deleting a transaction is allowed from edit.
+
+Delete control placement:
+
+- bottom of screen in destructive styling
+- not adjacent to primary save control
+
+Delete requires confirmation.
+
+Recommended confirmation copy:
+
+- `Delete this transaction?`
+- `This will remove it from your totals and reports.`
+
+Actions:
+
+- `Cancel`
+- `Delete`
+
+Preferred post-delete UX:
+
+- remove record locally
+- return user to prior screen
+- show undo toast for 5 seconds if implementation supports restorable soft delete pattern
+
+If true undo is not technically available:
+
+- still require explicit confirmation before delete
+
+#### 6.7.9 Edit Restrictions and Premium Entitlements
+
+If a transaction contains Premium-origin fields from prior entitlement state:
+
+- record remains viewable
+- basic fields remain editable
+
+If Premium has expired:
+
+- allow editing of non-premium-safe fields
+- provide clear rule for premium-only metadata
+
+Recommended v1 rule:
+
+- existing premium metadata remains readable
+- editing premium-only fields such as non-base currency or recurring linkage prompts upgrade
+- user may still edit title, amount, date, note, and category if the record can remain internally consistent
+
+The product must not trap user data behind a paywall.
+
+#### 6.7.10 Concurrency and Integrity Rules
+
+Because the app is local-first and single-user on device, concurrent edit conflicts should be rare but still handled sanely.
+
+If the underlying transaction changes while edit screen is open:
+
+- detect on save if record revision changed
+- prefer last-write-wins only if user is informed and conflict is minimal
+
+Recommended v1 behavior:
+
+- if conflict detected, show message
+- offer reload or overwrite decision only if technically feasible
+
+Minimum acceptable fallback:
+
+- preserve current edit draft in memory
+- inform user that the transaction changed and needs review before saving
+
+### 6.8 Shared Supporting Surfaces Used by Create and Edit
+
+#### 6.8.1 Category Picker Surface
+
+The category picker is a support screen tightly coupled to transaction entry and edit.
+
+Requirements:
+
+- loads fully offline
+- opens in under 100 milliseconds perceived time from tap
+- supports screen reader navigation
+- shows empty-state explanation if all categories for selected type are missing due to corruption
+
+If no valid categories exist for a type:
+
+- show recovery guidance rather than dead end
+
+Recommended copy:
+
+- `No categories available`
+- `Restore defaults or create one in Categories`
+
+#### 6.8.2 Date Picker Surface
+
+Date picker should use the most reliable platform-native experience unless a custom control materially improves localization or constraint handling.
+
+Requirements:
+
+- respects locale
+- respects device calendar conventions where supported
+- easy confirmation
+- no network dependency
+
+The user should not need more than:
+
+- 2 taps for today or yesterday
+- 4 to 6 taps for dates in recent weeks
+
+#### 6.8.3 Local Suggestion Tray
+
+Suggestions are not a separate screen but a supporting surface.
+
+It may appear:
+
+- below title field
+- above keyboard accessory area
+- inline beneath category selector
+
+The tray must be:
+
+- dismissible by ignoring it
+- compact
+- non-blocking
+
+Maximum recommendation:
+
+- 3 visible suggestions before scroll
+
+### 6.9 Navigation and Return Behavior
+
+The create and edit flows must return the user to their prior context cleanly.
+
+Required return patterns:
+
+- create from Home returns to Home
+- edit from Home row returns to prior context with updated row visible
+- create from onboarding follows onboarding-specific handoff defined earlier
+
+If save succeeds:
+
+- dismiss current modal or screen automatically
+
+If save fails:
+
+- remain in place
+- preserve all fields
+
+Back gesture rules:
+
+- if form clean, allow immediate back
+- if dirty, intercept and confirm discard
+
+### 6.10 Interaction Design Standards
+
+#### 6.10.1 Tap Targets
+
+Minimum tap target:
+
+- 44 x 44 pt equivalent
+
+Especially important for:
+
+- transaction type toggle
+- category field
+- date field
+- close button
+- save button
+
+#### 6.10.2 Keyboard Handling
+
+The form must remain usable with on-screen keyboard open.
+
+Requirements:
+
+- no critical field hidden without scroll path
+- save action remains reachable
+- screen does not jump unpredictably when suggestions appear
+
+#### 6.10.3 Motion
+
+Allowed motion:
+
+- subtle modal slide
+- field-state transitions
+- success row highlight on return
+
+Avoid:
+
+- celebratory success animation
+- bouncing CTA buttons
+- long save spinners for local writes
+
+#### 6.10.4 Haptics
+
+Optional haptic use:
+
+- light confirmation on successful save
+- soft warning on destructive delete confirmation
+
+Do not use aggressive haptics for validation errors.
+
+### 6.11 Accessibility Requirements for Transaction Entry and Edit
+
+The transaction entry and edit experience must be fully usable with:
+
+- VoiceOver / TalkBack
+- dynamic type
+- switch control
+- reduced motion
+- high contrast settings
+
+Specific requirements:
+
+- transaction type control announced with current selected state
+- amount field announced with currency context where possible
+- category and date controls clearly expose button semantics
+- validation errors announced programmatically after save attempt
+- save and delete actions clearly labeled
+
+Example screen reader phrasing:
+
+- `Amount, expense, US dollars, text field`
+- `Category, Groceries, button`
+- `Save Transaction, disabled`
+
+Dynamic type requirement:
+
+- large text must not obscure or truncate save action beyond recovery
+
+### 6.12 Privacy and Security Requirements Within the Flow
+
+The composer and edit screen must reinforce the product's privacy posture through behavior, not slogans.
+
+Requirements:
+
+- no bank-link prompts
+- no permission prompts unrelated to task
+- no cloud-account requirement before save
+- no network dependency for local create or edit
+
+Sensitive data handling expectations:
+
+- avoid unnecessary clipboard interactions
+- avoid logging raw transaction titles, notes, or amounts to debug output in production
+- preserve local-only handling for smart categorization logic
+
+### 6.13 Performance Requirements for Transaction Entry and Edit
+
+Target performance on a mid-range device:
+
+- composer open animation and visible readiness under 200 milliseconds
+- category picker open under 100 milliseconds perceived time
+- local suggestion response under 50 milliseconds after keystroke for common history sizes
+- save commit under 150 milliseconds
+- edit screen load under 120 milliseconds after row tap
+
+Scale targets:
+
+- 10,000 transactions
+- 120 categories
+- 60 active budgets
+- 5 years of local history
+
+Performance degradation must not cause:
+
+- keyboard lag
+- delayed amount entry
+- visibly stale field state after save
+
+### 6.14 Data Dependencies
+
+The create and edit flows depend on these local data domains:
+
+- categories
+- transactions
+- app settings
+- premium entitlement cache
+- currency configuration
+- local categorization memory
+- recurring transaction templates or links if Premium
+
+Derived data updated after create or edit may include:
+
+- month totals
+- category totals
+- budget utilization
+- recent transaction lists
+- charts/trends caches
+- widget view models
+
+All required dependencies must be available offline.
+
+### 6.15 Success Criteria for Transaction Entry and Editing
+
+This screen family is successful if users can do the following with minimal learning:
+
+- log a common expense in 5 to 10 seconds
+- correct a wrong category in under 5 seconds
+- save confidently without waiting on network
+- understand why save is blocked if validation fails
+- recover from accidental dismissal without confusion
+
+Behavioral indicators of success:
+
+- high ratio of transaction composer opens to successful saves
+- low abandonment after typing begins
+- frequent reuse of title and category suggestions
+- low support confusion around whether manual entry is required or optional
+- low regret-driven delete and re-create behavior caused by poor edit UX
+
+### 6.16 Final Definition
+
+The transaction entry and editing experience is the product's highest-stakes screen family: a fast, local-first capture and correction workflow that turns manual logging into a sustainable habit by making amounts easy to enter, categories easy to confirm, mistakes easy to fix, and every save immediate, private, and dependable.
