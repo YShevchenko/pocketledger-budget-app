@@ -1,0 +1,22 @@
+# Codex Review — PocketLedger (Budget App)
+
+## Product & Documentation Alignment
+- PocketLedger leans heavily into manual, envelope-based budgeting so users “feel” every transaction, keeping all data on-device and charging a one-time $19.99 unlock for the advanced ledger, recurring transactions, charts, and receipt attachments (`docs/SPEC.md`). The test plan explicitly calls out the primary risk as data corruption/math errors and demands integer-based sums plus deterministic export/import behavior (`docs/TEST-PLAN.md`).
+- Marketing classifies the product as Tier 3 Danger due to high finance CPIs, plans to rely on organic TikTok and long-tail Apple Search Ads, and targets EU markets that dislike Plaid (`docs/MARKETING.md`). However, the doc does not define CPI/LTV guardrails, spend limits, or creative experimentation, so the “avoid broad Facebook finance spend” thesis has no measurable stopping point.
+
+## Code & QA Observations
+- All monetary values are stored with `double`/`REAL` (see `domain/models/transaction.dart` and `data/database/app_database.dart`), yet the test plan specifically demands integer math to avoid floating-point drift. The current implementation risks off-by-$0.01 errors when sums cross rounding boundaries and there is no rounding layer in `BudgetEngine.recalculateBalances` or `sum` queries to normalize cents.
+- Premium gating is half baked. `BudgetProvider.canCreateEnvelope` blocks envelopes after five entries, but `addRecurringBill`, the export/import flows, and the advanced charts (visible in the UI) run without checking `isPremium`, so free users already get the stated premium features. The UI side also fails to let users upgrade: the “Upgrade Now” button shown when `canCreateEnvelope` is false is a stub (`TODO: navigate to premium screen`), so hitting the free limit leaves users locked out with no purchase path.
+- `IapService` loads `_kPremiumKey` from `SharedPreferences` but never writes back when a purchase or restore succeeds. After a reinstall or cold start, `_isPremium` resets to `false` even though the purchase still exists, forcing frustrated users to restore every time. `restorePurchases` also never updates preferences or exposes failures to the UI, so marketing cannot prove the “No $100/yr fees” claim holds.
+- Backups can corrupt the ledger. `ExportService.importJson` unconditionally inserts envelopes, transactions, transfers, and recurring bills, so importing the same file twice or replaying an old backup creates duplicate entries. There is no schema-version check, no dedup logic, and no validation before writing to SQLite, which directly contradicts the “data corruption” warning in the test plan.
+- Existing tests (`test/budget_engine_test.dart`, `test/export_service_test.dart`) cover happy paths for the engine and export serialization, but there are no tests for premium gating, JSON import deduplication, or persistence of `_kPremiumKey`, so the biggest revenue/blocker risks remain unverified.
+
+## Marketing & Revenue Risks
+- The marketing doc promises a Tier 3 DUPE (danger zone) rollout in Germany/Switzerland but never quantifies CPIs, refreshes, or creative assets. Without those guardrails, the “manual data” message is unlikely to survive the first $8 CPI spike.
+- There are no instrumentation or attribution asks (e.g., log premium purchases, campaign IDs, or retention vs envelope count), making it impossible to measure whether the organic TikTok push actually converts the “Dave Ramsey/YNAB” personas the spec targets.
+
+## Next Steps
+1. Adopt integer/cents math for all budget calculations (or add rounding layers) so `BudgetEngine`, the raw SQLite sums, and the UI charts honor the “no math errors” promise from `docs/TEST-PLAN.md`.
+2. Gate recurring bill creation, export/import, and the advanced report screens behind `isPremium` and wire the “Upgrade Now” dialog to actually route to the in-app purchase flow. Persist `_kPremiumKey` in `IapService` whenever a purchase/restore succeeds so the entitlement survives cold starts.
+3. Harden `ExportService.importJson` with schema validation, dedup heuristics (e.g., skip existing IDs), and error handling so repeated restores do not double-charge envelopes and the manual backup protectors from the test plan can be demonstrated.
+4. Expand `docs/MARKETING.md` with CPI/LTV guardrails, creative test plan, and instrumentation requirements that tie premium events (purchase, restore, envelope limit reached) back to revenue so the “no subscription” hook can be validated before spending more.
