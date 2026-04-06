@@ -21,7 +21,7 @@ class AppDatabase {
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
       onOpen: (db) async {
-        await db.execute('PRAGMA journal_mode=WAL');
+        await db.rawQuery('PRAGMA journal_mode=WAL');
       },
     );
   }
